@@ -17,9 +17,11 @@ use Yii;
  * @property string|null $qualifications
  * @property string|null $experience
  * @property string|null $date_sent
+ * @property string|null $course_id
  *
  * @property SystemAdmin $admin
- * @property CoursesModerated $moderator
+ * @property Courses $course
+ * @property Moderator $moderator
  */
 class ModeratorApprovalRequests extends \yii\db\ActiveRecord
 {
@@ -43,8 +45,10 @@ class ModeratorApprovalRequests extends \yii\db\ActiveRecord
             [['date_sent'], 'safe'],
             [['firstname', 'lastname'], 'string', 'max' => 45],
             [['phoneNo'], 'string', 'max' => 20],
+            [['course_id'], 'string', 'max' => 10],
             [['idModerator_Approval_Requests'], 'unique'],
-            [['moderator_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursesModerated::class, 'targetAttribute' => ['moderator_id' => 'idCourses_Moderated']],
+            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['course_id' => 'course_code']],
+            [['moderator_id'], 'exist', 'skipOnError' => true, 'targetClass' => Moderator::class, 'targetAttribute' => ['moderator_id' => 'memberID']],
             [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemAdmin::class, 'targetAttribute' => ['admin_id' => 'memberID']],
         ];
     }
@@ -65,6 +69,7 @@ class ModeratorApprovalRequests extends \yii\db\ActiveRecord
             'qualifications' => 'Qualifications',
             'experience' => 'Experience',
             'date_sent' => 'Date Sent',
+            'course_id' => 'Course ID',
         ];
     }
 
@@ -79,12 +84,22 @@ class ModeratorApprovalRequests extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Course]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCourse()
+    {
+        return $this->hasOne(Courses::class, ['course_code' => 'course_id']);
+    }
+
+    /**
      * Gets query for [[Moderator]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getModerator()
     {
-        return $this->hasOne(CoursesModerated::class, ['idCourses_Moderated' => 'moderator_id']);
+        return $this->hasOne(Moderator::class, ['memberID' => 'moderator_id']);
     }
 }

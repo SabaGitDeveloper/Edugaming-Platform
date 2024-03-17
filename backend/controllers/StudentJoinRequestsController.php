@@ -68,6 +68,10 @@ class StudentJoinRequestsController extends Controller
     public function actionCreate()
     {
         $model = new StudentJoinRequests();
+        $model->status='pending';
+        $model->date_sent=date('Y-m-d H:i:s');
+        $model->course_id=\Yii::$app->request->get('course_id');
+        $model->teacher_id=\Yii::$app->request->get('teacher_id') ;
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {

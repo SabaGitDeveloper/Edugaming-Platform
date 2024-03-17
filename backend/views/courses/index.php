@@ -38,7 +38,42 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Url::toRoute([$action, 'course_code' => $model->course_code]);
                  }
             ],
-            
+            [
+                'label' => 'Student Join Requests',
+                'value' => function ($model) {
+                    $joinRequests = $model->studentJoinRequests; // Assuming there's a relation named 'studentJoinRequests'
+                    $requestsList = '';
+                    foreach ($joinRequests as $request) {
+                        $requestsList .= $request->firstname . '<br>'; // Assuming student_name is the attribute for student's name
+                    }
+                    return $requestsList;
+                },
+                'format' => 'html',
+            ],
+            [
+                'label' => 'Teacher Approval Requests',
+                'value' => function ($model) {
+                    $joinRequests = $model->teacherApprovalRequests; // Assuming there's a relation named 'studentJoinRequests'
+                    $requestsList = '';
+                    foreach ($joinRequests as $request) {
+                        $requestsList .= $request->firstname . '<br>'; // Assuming student_name is the attribute for student's name
+                    }
+                    return $requestsList;
+                },
+                'format' => 'html',
+            ],
+            [
+                'label' => 'Moderator Approval Requests',
+                'value' => function ($model) {
+                    $joinRequests = $model->moderatorApprovalRequests; // Assuming there's a relation named 'studentJoinRequests'
+                    $requestsList = '';
+                    foreach ($joinRequests as $request) {
+                        $requestsList .= $request->firstname . '<br>'; // Assuming student_name is the attribute for student's name
+                    }
+                    return $requestsList;
+                },
+                'format' => 'html',
+            ],
 
         ],
     ]); ?> 

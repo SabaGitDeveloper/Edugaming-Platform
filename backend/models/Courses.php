@@ -14,11 +14,15 @@ use Yii;
  * @property CourseTeacher[] $courseTeachers
  * @property CourseTopics[] $courseTopics
  * @property CoursesModerated[] $coursesModerateds
- * @property GameAssignemnts $gameAssignemnts
+ * @property GameAssignments $gameAssignments
  * @property QuestionSet[] $questionSets
  * @property StudentJoinRequests[] $studentJoinRequests
- * @property Studentcourseenrollment[] $studentcourseenrollments
+ * 
  * @property Studentgameassignment[] $studentgameassignments
+ * 
+ * @property StudentJoinRequests[] $studentJoinRequests
+ * @property TeacherApprovalRequests[] $teacherApprovalRequests
+ * @property ModeratorApprovalRequests[] $moderatorApprovalRequests
  */
 class Courses extends \yii\db\ActiveRecord
 {
@@ -117,14 +121,10 @@ class Courses extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Studentcourseenrollments]].
+     * Gets query for [[Course-Student]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getStudentcourseenrollments()
-    {
-        return $this->hasMany(Studentcourseenrollment::class, ['CourseID' => 'course_code']);
-    }
 
     /**
      * Gets query for [[Studentgameassignments]].
@@ -134,5 +134,15 @@ class Courses extends \yii\db\ActiveRecord
     public function getStudentgameassignments()
     {
         return $this->hasMany(Studentgameassignment::class, ['CourseID' => 'course_code']);
+    }
+    /////////////////////////////////////////////////////////
+  
+    public function getTeacherApprovalRequests()
+    {
+        return $this->hasMany(TeacherApprovalRequests::class, ['course_id' => 'course_code']);
+    }
+    public function getModeratorApprovalRequests()
+    {
+        return $this->hasMany(ModeratorApprovalRequests::class, ['course_id' => 'course_code']);
     }
 }

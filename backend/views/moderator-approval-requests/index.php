@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'qualifications:ntext',
             //'experience:ntext',
             //'date_sent',
+            //'course_id',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, ModeratorApprovalRequests $model, $key, $index, $column) {

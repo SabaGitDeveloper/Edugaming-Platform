@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'phoneNo',
             'qualifications:ntext',
             'experience:ntext',
+            'course_id',
         ],
     ]) ?>
 

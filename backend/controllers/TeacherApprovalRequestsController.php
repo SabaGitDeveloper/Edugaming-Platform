@@ -68,6 +68,10 @@ class TeacherApprovalRequestsController extends Controller
     public function actionCreate()
     {
         $model = new TeacherApprovalRequests();
+        $model->status='pending';
+        $model->date_sent=date('Y-m-d H:i:s');
+        $model->course_id=\Yii::$app->request->get('course_id');
+        $model->Moderator_id=\Yii::$app->request->get('moderator_id') ;
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {

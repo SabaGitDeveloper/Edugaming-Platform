@@ -18,7 +18,7 @@ class ModeratorApprovalRequestsSearch extends ModeratorApprovalRequests
     {
         return [
             [['idModerator_Approval_Requests', 'moderator_id', 'admin_id'], 'integer'],
-            [['status', 'firstname', 'lastname', 'phoneNo', 'qualifications', 'experience', 'date_sent'], 'safe'],
+            [['status', 'firstname', 'lastname', 'phoneNo', 'qualifications', 'experience', 'date_sent', 'course_id'], 'safe'],
         ];
     }
 
@@ -69,7 +69,8 @@ class ModeratorApprovalRequestsSearch extends ModeratorApprovalRequests
             ->andFilterWhere(['like', 'lastname', $this->lastname])
             ->andFilterWhere(['like', 'phoneNo', $this->phoneNo])
             ->andFilterWhere(['like', 'qualifications', $this->qualifications])
-            ->andFilterWhere(['like', 'experience', $this->experience]);
+            ->andFilterWhere(['like', 'experience', $this->experience])
+            ->andFilterWhere(['like', 'course_id', $this->course_id]);
 
         return $dataProvider;
     }
