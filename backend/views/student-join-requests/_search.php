@@ -25,6 +25,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status') ?>
 
+    <?php // echo $form->field($model, 'date_sent') ?>
+
+    <?php // echo $form->field($model, 'firstname') ?>
+
+    <?php // echo $form->field($model, 'lastname') ?>
+
+    <?php // echo $form->field($model, 'phoneNo') ?>
+
+    <?php // echo $form->field($model, 'qualifications') ?>
+
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>

@@ -34,6 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'teacher_id',
             'course_id',
             'status',
+            //'date_sent',
+            //'firstname',
+            //'lastname',
+            //'phoneNo',
+            //'qualifications:ntext',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, StudentJoinRequests $model, $key, $index, $column) {

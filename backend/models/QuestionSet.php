@@ -10,14 +10,14 @@ use Yii;
  * @property int $question_setID
  * @property int $topicID
  * @property string $course_code
- * @property string $date_created
+ * @property string|null $date_created
  * @property int $created_by
  * @property string $difficulty_level
- * @property string $approval_status
+ * @property string|null $status
  *
  * @property Courses $courseCode
  * @property Teacher $createdBy
- * @property GameAssignemnts[] $gameAssignemnts
+ * @property GameAssignments[] $gameAssignments
  * @property Gameinterfacecompatibility[] $gameinterfacecompatibilities
  * @property Questions[] $questions
  * @property Topic $topic
@@ -38,11 +38,12 @@ class QuestionSet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['topicID', 'course_code', 'date_created', 'created_by', 'difficulty_level', 'approval_status'], 'required'],
+            [['topicID', 'course_code', 'created_by', 'difficulty_level'], 'required'],
             [['topicID', 'created_by'], 'integer'],
+            [['date_created'], 'safe'],
+            [['status'], 'string'],
             [['course_code'], 'string', 'max' => 10],
-            [['date_created', 'difficulty_level'], 'string', 'max' => 30],
-            [['approval_status'], 'string', 'max' => 1],
+            [['difficulty_level'], 'string', 'max' => 30],
             [['course_code'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['course_code' => 'course_code']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => Teacher::class, 'targetAttribute' => ['created_by' => 'memberID']],
             [['topicID'], 'exist', 'skipOnError' => true, 'targetClass' => Topic::class, 'targetAttribute' => ['topicID' => 'topicID']],
@@ -61,7 +62,7 @@ class QuestionSet extends \yii\db\ActiveRecord
             'date_created' => 'Date Created',
             'created_by' => 'Created By',
             'difficulty_level' => 'Difficulty Level',
-            'approval_status' => 'Approval Status',
+            'status' => 'Status',
         ];
     }
 
@@ -86,13 +87,13 @@ class QuestionSet extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[GameAssignemnts]].
+     * Gets query for [[GameAssignments]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getGameAssignemnts()
+    public function getGameAssignments()
     {
-        return $this->hasMany(GameAssignemnts::class, ['question_setID' => 'question_setID']);
+        return $this->hasMany(GameAssignments::class, ['question_setID' => 'question_setID']);
     }
 
     /**

@@ -18,7 +18,7 @@ class QuestionSetSearch extends QuestionSet
     {
         return [
             [['question_setID', 'topicID', 'created_by'], 'integer'],
-            [['course_code', 'date_created', 'difficulty_level', 'approval_status'], 'safe'],
+            [['course_code', 'date_created', 'difficulty_level', 'status'], 'safe'],
         ];
     }
 
@@ -60,13 +60,13 @@ class QuestionSetSearch extends QuestionSet
         $query->andFilterWhere([
             'question_setID' => $this->question_setID,
             'topicID' => $this->topicID,
+            'date_created' => $this->date_created,
             'created_by' => $this->created_by,
         ]);
 
         $query->andFilterWhere(['like', 'course_code', $this->course_code])
-            ->andFilterWhere(['like', 'date_created', $this->date_created])
             ->andFilterWhere(['like', 'difficulty_level', $this->difficulty_level])
-            ->andFilterWhere(['like', 'approval_status', $this->approval_status]);
+            ->andFilterWhere(['like', 'status', $this->status]);
 
         return $dataProvider;
     }

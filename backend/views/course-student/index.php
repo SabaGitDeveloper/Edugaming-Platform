@@ -1,24 +1,24 @@
 <?php
 
-use backend\models\QuestionSet;
+use backend\models\CourseStudent;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var backend\models\QuestionSetSearch $searchModel */
+/** @var backend\models\CourseStudentSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Question Sets';
+$this->title = 'Course Students';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="question-set-index">
+<div class="course-student-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Question Set', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Course Student', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -29,17 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'question_setID',
-            'topicID',
-            'course_code',
-            'date_created',
-            'created_by',
-            //'difficulty_level',
-            //'status',
+            'idCourse_Student',
+            'CourseID',
+            'status',
+            'Student_ID',
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, QuestionSet $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'question_setID' => $model->question_setID]);
+                'urlCreator' => function ($action, CourseStudent $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'idCourse_Student' => $model->idCourse_Student]);
                  }
             ],
         ],

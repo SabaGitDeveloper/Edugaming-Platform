@@ -18,7 +18,7 @@ class TeacherApprovalRequestsSearch extends TeacherApprovalRequests
     {
         return [
             [['idTeacher_Approval_Requests', 'teacher_id', 'Moderator_id'], 'integer'],
-            [['status'], 'safe'],
+            [['status', 'date_sent', 'firstname', 'lastname', 'phoneNo', 'qualifications', 'experience'], 'safe'],
         ];
     }
 
@@ -61,9 +61,15 @@ class TeacherApprovalRequestsSearch extends TeacherApprovalRequests
             'idTeacher_Approval_Requests' => $this->idTeacher_Approval_Requests,
             'teacher_id' => $this->teacher_id,
             'Moderator_id' => $this->Moderator_id,
+            'date_sent' => $this->date_sent,
         ]);
 
-        $query->andFilterWhere(['like', 'status', $this->status]);
+        $query->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'firstname', $this->firstname])
+            ->andFilterWhere(['like', 'lastname', $this->lastname])
+            ->andFilterWhere(['like', 'phoneNo', $this->phoneNo])
+            ->andFilterWhere(['like', 'qualifications', $this->qualifications])
+            ->andFilterWhere(['like', 'experience', $this->experience]);
 
         return $dataProvider;
     }

@@ -10,10 +10,16 @@ use Yii;
  * @property int $idModerator_Approval_Requests
  * @property int $moderator_id
  * @property int $admin_id
- * @property string $status
+ * @property string|null $status
+ * @property string|null $firstname
+ * @property string|null $lastname
+ * @property string|null $phoneNo
+ * @property string|null $qualifications
+ * @property string|null $experience
+ * @property string|null $date_sent
  *
  * @property SystemAdmin $admin
- * @property Moderator $moderator
+ * @property CoursesModerated $moderator
  */
 class ModeratorApprovalRequests extends \yii\db\ActiveRecord
 {
@@ -31,11 +37,14 @@ class ModeratorApprovalRequests extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idModerator_Approval_Requests', 'moderator_id', 'admin_id', 'status'], 'required'],
+            [['idModerator_Approval_Requests', 'moderator_id', 'admin_id'], 'required'],
             [['idModerator_Approval_Requests', 'moderator_id', 'admin_id'], 'integer'],
-            [['status'], 'string', 'max' => 1],
+            [['status', 'qualifications', 'experience'], 'string'],
+            [['date_sent'], 'safe'],
+            [['firstname', 'lastname'], 'string', 'max' => 45],
+            [['phoneNo'], 'string', 'max' => 20],
             [['idModerator_Approval_Requests'], 'unique'],
-            [['moderator_id'], 'exist', 'skipOnError' => true, 'targetClass' => Moderator::class, 'targetAttribute' => ['moderator_id' => 'memberID']],
+            [['moderator_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursesModerated::class, 'targetAttribute' => ['moderator_id' => 'idCourses_Moderated']],
             [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => SystemAdmin::class, 'targetAttribute' => ['admin_id' => 'memberID']],
         ];
     }
@@ -50,6 +59,12 @@ class ModeratorApprovalRequests extends \yii\db\ActiveRecord
             'moderator_id' => 'Moderator ID',
             'admin_id' => 'Admin ID',
             'status' => 'Status',
+            'firstname' => 'Firstname',
+            'lastname' => 'Lastname',
+            'phoneNo' => 'Phone No',
+            'qualifications' => 'Qualifications',
+            'experience' => 'Experience',
+            'date_sent' => 'Date Sent',
         ];
     }
 
@@ -70,6 +85,6 @@ class ModeratorApprovalRequests extends \yii\db\ActiveRecord
      */
     public function getModerator()
     {
-        return $this->hasOne(Moderator::class, ['memberID' => 'moderator_id']);
+        return $this->hasOne(CoursesModerated::class, ['idCourses_Moderated' => 'moderator_id']);
     }
 }

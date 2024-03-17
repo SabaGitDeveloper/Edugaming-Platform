@@ -11,11 +11,16 @@ use Yii;
  * @property int $student_id
  * @property int $teacher_id
  * @property string $course_id
- * @property string $status
+ * @property string|null $status
+ * @property string|null $date_sent
+ * @property string|null $firstname
+ * @property string|null $lastname
+ * @property string|null $phoneNo
+ * @property string|null $qualifications
  *
  * @property Courses $course
  * @property Student $student
- * @property Teacher $teacher
+ * @property CourseTeacher $teacher
  */
 class StudentJoinRequests extends \yii\db\ActiveRecord
 {
@@ -33,13 +38,16 @@ class StudentJoinRequests extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idStudent_join_Requests', 'student_id', 'teacher_id', 'course_id', 'status'], 'required'],
+            [['idStudent_join_Requests', 'student_id', 'teacher_id', 'course_id'], 'required'],
             [['idStudent_join_Requests', 'student_id', 'teacher_id'], 'integer'],
+            [['status', 'qualifications'], 'string'],
+            [['date_sent'], 'safe'],
             [['course_id'], 'string', 'max' => 10],
-            [['status'], 'string', 'max' => 1],
+            [['firstname', 'lastname'], 'string', 'max' => 45],
+            [['phoneNo'], 'string', 'max' => 20],
             [['idStudent_join_Requests'], 'unique'],
+            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseTeacher::class, 'targetAttribute' => ['teacher_id' => 'idCourse_Teacher']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['course_id' => 'course_code']],
-            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => Teacher::class, 'targetAttribute' => ['teacher_id' => 'memberID']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['student_id' => 'memberID']],
         ];
     }
@@ -55,6 +63,11 @@ class StudentJoinRequests extends \yii\db\ActiveRecord
             'teacher_id' => 'Teacher ID',
             'course_id' => 'Course ID',
             'status' => 'Status',
+            'date_sent' => 'Date Sent',
+            'firstname' => 'Firstname',
+            'lastname' => 'Lastname',
+            'phoneNo' => 'Phone No',
+            'qualifications' => 'Qualifications',
         ];
     }
 
@@ -85,6 +98,6 @@ class StudentJoinRequests extends \yii\db\ActiveRecord
      */
     public function getTeacher()
     {
-        return $this->hasOne(Teacher::class, ['memberID' => 'teacher_id']);
+        return $this->hasOne(CourseTeacher::class, ['idCourse_Teacher' => 'teacher_id']);
     }
 }

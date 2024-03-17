@@ -4,12 +4,12 @@ namespace backend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\StudentJoinRequests;
+use backend\models\CourseTeacher;
 
 /**
- * StudentJoinRequestsSearch represents the model behind the search form of `backend\models\StudentJoinRequests`.
+ * CourseTeacherSearch represents the model behind the search form of `backend\models\CourseTeacher`.
  */
-class StudentJoinRequestsSearch extends StudentJoinRequests
+class CourseTeacherSearch extends CourseTeacher
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class StudentJoinRequestsSearch extends StudentJoinRequests
     public function rules()
     {
         return [
-            [['idStudent_join_Requests', 'student_id', 'teacher_id'], 'integer'],
-            [['course_id', 'status', 'date_sent', 'firstname', 'lastname', 'phoneNo', 'qualifications'], 'safe'],
+            [['idCourse_Teacher', 'Teacher_id'], 'integer'],
+            [['Course_id', 'is_active'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class StudentJoinRequestsSearch extends StudentJoinRequests
      */
     public function search($params)
     {
-        $query = StudentJoinRequests::find();
+        $query = CourseTeacher::find();
 
         // add conditions that should always apply here
 
@@ -58,18 +58,12 @@ class StudentJoinRequestsSearch extends StudentJoinRequests
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'idStudent_join_Requests' => $this->idStudent_join_Requests,
-            'student_id' => $this->student_id,
-            'teacher_id' => $this->teacher_id,
-            'date_sent' => $this->date_sent,
+            'idCourse_Teacher' => $this->idCourse_Teacher,
+            'Teacher_id' => $this->Teacher_id,
         ]);
 
-        $query->andFilterWhere(['like', 'course_id', $this->course_id])
-            ->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'firstname', $this->firstname])
-            ->andFilterWhere(['like', 'lastname', $this->lastname])
-            ->andFilterWhere(['like', 'phoneNo', $this->phoneNo])
-            ->andFilterWhere(['like', 'qualifications', $this->qualifications]);
+        $query->andFilterWhere(['like', 'Course_id', $this->Course_id])
+            ->andFilterWhere(['like', 'is_active', $this->is_active]);
 
         return $dataProvider;
     }

@@ -4,30 +4,24 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var backend\models\QuestionSetSearch $model */
+/** @var backend\models\CourseTeacherSearch $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="question-set-search">
+<div class="course-teacher-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'question_setID') ?>
+    <?= $form->field($model, 'idCourse_Teacher') ?>
 
-    <?= $form->field($model, 'topicID') ?>
+    <?= $form->field($model, 'Course_id') ?>
 
-    <?= $form->field($model, 'course_code') ?>
+    <?= $form->field($model, 'Teacher_id') ?>
 
-    <?= $form->field($model, 'date_created') ?>
-
-    <?= $form->field($model, 'created_by') ?>
-
-    <?php // echo $form->field($model, 'difficulty_level') ?>
-
-    <?php // echo $form->field($model, 'status') ?>
+    <?= $form->field($model, 'is_active') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
