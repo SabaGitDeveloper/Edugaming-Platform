@@ -35,10 +35,11 @@ class StudentJoinRequests extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    // [['idStudent_join_Requests', 'student_id', 'teacher_id', 'course_id'], 'required'],
     public function rules()
     {
         return [
-            [['idStudent_join_Requests', 'student_id', 'teacher_id', 'course_id'], 'required'],
+    
             [['idStudent_join_Requests', 'student_id', 'teacher_id'], 'integer'],
             [['status', 'qualifications'], 'string'],
             [['date_sent'], 'safe'],

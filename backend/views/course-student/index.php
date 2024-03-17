@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'idCourse_Student',
             'CourseID',
-            'status',
             'Student_ID',
             [
                 'class' => ActionColumn::className(),

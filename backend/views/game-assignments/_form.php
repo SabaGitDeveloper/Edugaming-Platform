@@ -12,11 +12,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'course_code')->textInput(['maxlength' => true]) ?>
+    <!--<?= $form->field($model, 'course_code')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'assigned_by')->textInput() ?>
 
-    <?= $form->field($model, 'date_assigned')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'date_assigned')->textInput(['maxlength' => true]) ?>-->
 
     <?= $form->field($model, 'due_date')->textInput(['maxlength' => true]) ?>
 

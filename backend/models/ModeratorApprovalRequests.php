@@ -36,10 +36,11 @@ class ModeratorApprovalRequests extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    //            [['idModerator_Approval_Requests', 'moderator_id', 'admin_id'], 'required'],
     public function rules()
     {
         return [
-            [['idModerator_Approval_Requests', 'moderator_id', 'admin_id'], 'required'],
+
             [['idModerator_Approval_Requests', 'moderator_id', 'admin_id'], 'integer'],
             [['status', 'qualifications', 'experience'], 'string'],
             [['date_sent'], 'safe'],

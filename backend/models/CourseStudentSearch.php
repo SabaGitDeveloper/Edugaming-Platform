@@ -18,7 +18,7 @@ class CourseStudentSearch extends CourseStudent
     {
         return [
             [['idCourse_Student', 'Student_ID'], 'integer'],
-            [['CourseID', 'status'], 'safe'],
+            [['CourseID'], 'safe'],
         ];
     }
 
@@ -62,8 +62,7 @@ class CourseStudentSearch extends CourseStudent
             'Student_ID' => $this->Student_ID,
         ]);
 
-        $query->andFilterWhere(['like', 'CourseID', $this->CourseID])
-            ->andFilterWhere(['like', 'status', $this->status]);
+        $query->andFilterWhere(['like', 'CourseID', $this->CourseID]);
 
         return $dataProvider;
     }

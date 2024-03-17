@@ -36,10 +36,11 @@ class TeacherApprovalRequests extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    // [['idTeacher_Approval_Requests', 'teacher_id', 'Moderator_id'], 'required'],
     public function rules()
     {
         return [
-            [['idTeacher_Approval_Requests', 'teacher_id', 'Moderator_id'], 'required'],
+           
             [['idTeacher_Approval_Requests', 'teacher_id', 'Moderator_id'], 'integer'],
             [['status', 'qualifications', 'experience'], 'string'],
             [['date_sent'], 'safe'],

@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\models;
+namespace backend\controllers;
 
-use backend\models\CourseTeacher;
-use backend\models\CourseTeacherSearch;
+use backend\models\GameInterfaceResource;
+use backend\models\GameInterfaceResourceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * CourseTeacherController implements the CRUD actions for CourseTeacher model.
+ * GameInterfaceResourceController implements the CRUD actions for GameInterfaceResource model.
  */
-class CourseTeacherController extends Controller
+class GameInterfaceResourceController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class CourseTeacherController extends Controller
     }
 
     /**
-     * Lists all CourseTeacher models.
+     * Lists all GameInterfaceResource models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new CourseTeacherSearch();
+        $searchModel = new GameInterfaceResourceSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,30 +48,30 @@ class CourseTeacherController extends Controller
     }
 
     /**
-     * Displays a single CourseTeacher model.
-     * @param int $idCourse_Teacher Id Course Teacher
+     * Displays a single GameInterfaceResource model.
+     * @param int $idGameInterfaceResource Id Game Interface Resource
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($idCourse_Teacher)
+    public function actionView($idGameInterfaceResource)
     {
         return $this->render('view', [
-            'model' => $this->findModel($idCourse_Teacher),
+            'model' => $this->findModel($idGameInterfaceResource),
         ]);
     }
 
     /**
-     * Creates a new CourseTeacher model.
+     * Creates a new GameInterfaceResource model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new CourseTeacher();
+        $model = new GameInterfaceResource();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'idCourse_Teacher' => $model->idCourse_Teacher]);
+                return $this->redirect(['view', 'idGameInterfaceResource' => $model->idGameInterfaceResource]);
             }
         } else {
             $model->loadDefaultValues();
@@ -83,18 +83,18 @@ class CourseTeacherController extends Controller
     }
 
     /**
-     * Updates an existing CourseTeacher model.
+     * Updates an existing GameInterfaceResource model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $idCourse_Teacher Id Course Teacher
+     * @param int $idGameInterfaceResource Id Game Interface Resource
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($idCourse_Teacher)
+    public function actionUpdate($idGameInterfaceResource)
     {
-        $model = $this->findModel($idCourse_Teacher);
+        $model = $this->findModel($idGameInterfaceResource);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'idCourse_Teacher' => $model->idCourse_Teacher]);
+            return $this->redirect(['view', 'idGameInterfaceResource' => $model->idGameInterfaceResource]);
         }
 
         return $this->render('update', [
@@ -103,29 +103,29 @@ class CourseTeacherController extends Controller
     }
 
     /**
-     * Deletes an existing CourseTeacher model.
+     * Deletes an existing GameInterfaceResource model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $idCourse_Teacher Id Course Teacher
+     * @param int $idGameInterfaceResource Id Game Interface Resource
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($idCourse_Teacher)
+    public function actionDelete($idGameInterfaceResource)
     {
-        $this->findModel($idCourse_Teacher)->delete();
+        $this->findModel($idGameInterfaceResource)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the CourseTeacher model based on its primary key value.
+     * Finds the GameInterfaceResource model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $idCourse_Teacher Id Course Teacher
-     * @return CourseTeacher the loaded model
+     * @param int $idGameInterfaceResource Id Game Interface Resource
+     * @return GameInterfaceResource the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($idCourse_Teacher)
+    protected function findModel($idGameInterfaceResource)
     {
-        if (($model = CourseTeacher::findOne(['idCourse_Teacher' => $idCourse_Teacher])) !== null) {
+        if (($model = GameInterfaceResource::findOne(['idGameInterfaceResource' => $idGameInterfaceResource])) !== null) {
             return $model;
         }
 

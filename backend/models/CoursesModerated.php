@@ -27,10 +27,11 @@ class CoursesModerated extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    // [['idCourses_Moderated', 'course_id', 'moderator_id'], 'required'],
     public function rules()
     {
         return [
-            [['idCourses_Moderated', 'course_id', 'moderator_id'], 'required'],
+           
             [['idCourses_Moderated', 'moderator_id'], 'integer'],
             [['course_id'], 'string', 'max' => 10],
             [['idCourses_Moderated'], 'unique'],

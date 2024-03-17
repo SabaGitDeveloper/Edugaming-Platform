@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Create GameAssignments', ['game-assignments/create', 'idCourse_Teacher' => $model->idCourse_Teacher,'course_code'=>$model->Course_id,'teacher_id'=>$model->Teacher_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -32,7 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'idCourse_Teacher',
             'Course_id',
             'Teacher_id',
-            'is_active',
         ],
     ]) ?>
 

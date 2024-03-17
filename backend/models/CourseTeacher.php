@@ -10,7 +10,6 @@ use Yii;
  * @property int $idCourse_Teacher
  * @property string $Course_id
  * @property int $Teacher_id
- * @property string $is_active
  *
  * @property Courses $course
  * @property Teacher $teacher
@@ -28,13 +27,15 @@ class CourseTeacher extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    // [['idCourse_Teacher', 'Course_id', 'Teacher_id', 'is_active'], 'required'],
+    // [['is_active'], 'string', 'max' => 1],
     public function rules()
     {
         return [
-            [['idCourse_Teacher', 'Course_id', 'Teacher_id', 'is_active'], 'required'],
+           
             [['idCourse_Teacher', 'Teacher_id'], 'integer'],
             [['Course_id'], 'string', 'max' => 10],
-            [['is_active'], 'string', 'max' => 1],
+           
             [['idCourse_Teacher'], 'unique'],
             [['Teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => Teacher::class, 'targetAttribute' => ['Teacher_id' => 'memberID']],
             [['Course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['Course_id' => 'course_code']],

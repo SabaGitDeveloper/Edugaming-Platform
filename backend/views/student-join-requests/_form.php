@@ -12,17 +12,17 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'idStudent_join_Requests')->textInput() ?>
+    <!--<?= $form->field($model, 'idStudent_join_Requests')->textInput() ?>-->
 
     <?= $form->field($model, 'student_id')->textInput() ?>
-
+<!--wishlist me teacher ki id ki jaga teacher name pick kare student from drop down aur us ke against automatically teacher_id chali jai db me-->
     <?= $form->field($model, 'teacher_id')->textInput() ?>
 
-    <?= $form->field($model, 'course_id')->textInput(['maxlength' => true]) ?>
+    <!--<?= $form->field($model, 'course_id')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'status')->dropDownList([ 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'date_sent')->textInput() ?>
+    <?= $form->field($model, 'date_sent')->textInput() ?>-->
 
     <?= $form->field($model, 'firstname')->textInput(['maxlength' => true]) ?>
 

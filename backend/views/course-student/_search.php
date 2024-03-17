@@ -19,8 +19,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'CourseID') ?>
 
-    <?= $form->field($model, 'status') ?>
-
     <?= $form->field($model, 'Student_ID') ?>
 
     <div class="form-group">

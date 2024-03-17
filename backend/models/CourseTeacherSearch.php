@@ -18,7 +18,7 @@ class CourseTeacherSearch extends CourseTeacher
     {
         return [
             [['idCourse_Teacher', 'Teacher_id'], 'integer'],
-            [['Course_id', 'is_active'], 'safe'],
+            [['Course_id'], 'safe'],
         ];
     }
 
@@ -62,8 +62,7 @@ class CourseTeacherSearch extends CourseTeacher
             'Teacher_id' => $this->Teacher_id,
         ]);
 
-        $query->andFilterWhere(['like', 'Course_id', $this->Course_id])
-            ->andFilterWhere(['like', 'is_active', $this->is_active]);
+        $query->andFilterWhere(['like', 'Course_id', $this->Course_id]);
 
         return $dataProvider;
     }

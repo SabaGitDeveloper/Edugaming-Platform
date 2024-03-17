@@ -68,6 +68,9 @@ class GameAssignmentsController extends Controller
     public function actionCreate()
     {
         $model = new GameAssignments();
+        $model->date_assigned=date('Y-m-d H:i:s');
+        $model->course_code=\Yii::$app->request->get('course_code');
+        $model->assigned_by=\Yii::$app->request->get('teacher_id');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {

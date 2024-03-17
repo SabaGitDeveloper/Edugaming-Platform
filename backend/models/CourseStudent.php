@@ -9,7 +9,6 @@ use Yii;
  *
  * @property int $idCourse_Student
  * @property string $CourseID
- * @property string $status
  * @property int $Student_ID
  *
  * @property Courses $course
@@ -31,10 +30,9 @@ class CourseStudent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CourseID', 'status', 'Student_ID'], 'required'],
+            [['CourseID', 'Student_ID'], 'required'],
             [['Student_ID'], 'integer'],
             [['CourseID'], 'string', 'max' => 10],
-            [['status'], 'string', 'max' => 1],
             [['CourseID'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['CourseID' => 'course_code']],
             [['Student_ID'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['Student_ID' => 'memberID']],
         ];
@@ -48,7 +46,6 @@ class CourseStudent extends \yii\db\ActiveRecord
         return [
             'idCourse_Student' => 'Id Course Student',
             'CourseID' => 'Course ID',
-            'status' => 'Status',
             'Student_ID' => 'Student ID',
         ];
     }

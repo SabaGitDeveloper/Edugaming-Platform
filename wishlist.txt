@@ -1,0 +1,12 @@
+-for all requests one thing needs to be done is to control not same person placing teacher and student request on same course and also not same person placing same type of request on same course more than once
+-another way to link teacher and moderator requests is through list of moderators to place teacher request against one of them instead of against courses
+-teacher id ki jaga name pick ho db se 
+-also need to manage role based access
+-and how to manage use of 3nf associative tables
+-and how to test ke student assignment mile tou wo usko play karsake uske question ko dekh sake?
+-to manage auto picking of userid for join and approval requessts from logged in user info
+-jab koi user signup k baad login kry ga to konsy page py jai ga q k us time sirf member wo....dosra request kaisy kry ga
+-//jab tk uski request approve ni hoti wo simple welcome page aur kuch functionalities like play sample game etc use kr skta? approve hony k baad personalized dashboard ai ga
+-now what to focus on next? UI design? How to make personal dashboards?
+-how to remove the ability to edit and delete game assignments from student view
+-take a look at the game interface and resource tables to see if correct attributes and datatypes
