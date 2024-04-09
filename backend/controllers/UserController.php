@@ -2,17 +2,16 @@
 
 namespace backend\controllers;
 
-use Yii;
-use backend\models\Questions;
-use backend\models\QuestionsSearch;
+use backend\models\User;
+use backend\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * QuestionsController implements the CRUD actions for Questions model.
+ * UserController implements the CRUD actions for User model.
  */
-class QuestionsController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,26 +32,15 @@ class QuestionsController extends Controller
     }
 
     /**
-     * Lists all Questions models.
+     * Lists all User models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $qsID=Yii::$app->request->get('question_setID');
-       // $assID=Yii::$app->request->get('assignmentID');
-        if($qsID!==null){
-            Yii::$app->session->set('question_setID',$qsID);
-        }
-        // if($assID!==null){
-        //     Yii::$app->session->set('assignmentID',$assID);
-        // }
-        $searchModel = new QuestionsSearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        if($qsID!==null){
-            $dataProvider->query->andFilterWhere(['QuestionSet'=>$qsID]);
-        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -60,32 +48,30 @@ class QuestionsController extends Controller
     }
 
     /**
-     * Displays a single Questions model.
-     * @param int $QuestionNo Question No
+     * Displays a single User model.
+     * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($QuestionNo)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($QuestionNo),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Questions model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Questions();
-        $questionsetID=\Yii::$app->session->get('question_setID');
-        $model->QuestionSet=$questionsetID;
+        $model = new User();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'QuestionNo' => $model->QuestionNo]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -97,18 +83,18 @@ class QuestionsController extends Controller
     }
 
     /**
-     * Updates an existing Questions model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $QuestionNo Question No
+     * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($QuestionNo)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($QuestionNo);
+        $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'QuestionNo' => $model->QuestionNo]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -117,29 +103,29 @@ class QuestionsController extends Controller
     }
 
     /**
-     * Deletes an existing Questions model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $QuestionNo Question No
+     * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($QuestionNo)
+    public function actionDelete($id)
     {
-        $this->findModel($QuestionNo)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Questions model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $QuestionNo Question No
-     * @return Questions the loaded model
+     * @param int $id ID
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($QuestionNo)
+    protected function findModel($id)
     {
-        if (($model = Questions::findOne(['QuestionNo' => $QuestionNo])) !== null) {
+        if (($model = User::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

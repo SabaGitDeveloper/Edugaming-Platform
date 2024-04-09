@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\QuestionSet;
 use backend\models\QuestionSetSearch;
 use yii\web\Controller;
@@ -38,9 +39,16 @@ class QuestionSetController extends Controller
      */
     public function actionIndex()
     {
+        $topicID=Yii::$app->request->get('topicID');
+        if($topicID!==null){
+            Yii::$app->session->set('topicID',$topicID);
+        }
         $searchModel = new QuestionSetSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        if($topicID!==null){
+            $dataProvider->query->andFilterWhere(['topicID'=>$topicID]);
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -68,7 +76,7 @@ class QuestionSetController extends Controller
     public function actionCreate()
     {
         $model = new QuestionSet();
-        $topicID=\Yii::$app->request->get('topicID');
+        $topicID=\Yii::$app->session->get('topicID');
         $model->topicID=$topicID;
 
         if ($this->request->isPost) {

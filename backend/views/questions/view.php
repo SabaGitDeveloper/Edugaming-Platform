@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-        <?= Html::a('View Options', ['options/create', 'QuestionNo' => $model->QuestionNo], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('View Options', ['options/index', 'QuestionNo' => $model->QuestionNo], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= DetailView::widget([

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\GameAssignments;
 use backend\models\GameAssignmentsSearch;
 use yii\web\Controller;
@@ -38,9 +39,16 @@ class GameAssignmentsController extends Controller
      */
     public function actionIndex()
     {
+        $courseid = Yii::$app->request->get('course_code');
+        if($courseid!==null){
+            Yii::$app->session->set('course_code',$courseid);
+        }
         $searchModel = new GameAssignmentsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        if ($courseid !== null) {
+            $dataProvider->query->andFilterWhere(['course_code' => $courseid]);
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -67,10 +75,32 @@ class GameAssignmentsController extends Controller
      */
     public function actionCreate()
     {
+        // Only a teacher can create a gameassignment
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = new GameAssignments();
         $model->date_assigned=date('Y-m-d H:i:s');
         $model->course_code=\Yii::$app->request->get('course_code');
-        $model->assigned_by=\Yii::$app->request->get('teacher_id');
+        $model->assigned_by=\Yii::$app->session->get('user_id');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -94,6 +124,28 @@ class GameAssignmentsController extends Controller
      */
     public function actionUpdate($assignmentID)
     {
+        // Only a teacher can update a gameassignment
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = $this->findModel($assignmentID);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -114,6 +166,28 @@ class GameAssignmentsController extends Controller
      */
     public function actionDelete($assignmentID)
     {
+        // Only a teacher can delete a game assignment
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $this->findModel($assignmentID)->delete();
 
         return $this->redirect(['index']);

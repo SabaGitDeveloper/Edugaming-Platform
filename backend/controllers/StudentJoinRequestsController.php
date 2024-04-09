@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\StudentJoinRequests;
 use backend\models\StudentJoinRequestsSearch;
 use yii\web\Controller;
@@ -38,8 +39,43 @@ class StudentJoinRequestsController extends Controller
      */
     public function actionIndex()
     {
+        // Only a student or teacher can view a student request
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to students only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'student'&&$_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to students only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
+        $courseid = Yii::$app->request->get('course_id');
+        $userid = Yii::$app->session->get('user_id');
+        $useris = Yii::$app->session->get('user_is');
+        if($courseid!==null){
+            Yii::$app->session->set('course_code',$courseid);
+        }
         $searchModel = new StudentJoinRequestsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+
+        if ($courseid !== null) {
+            if($useris=='teacher')
+            $dataProvider->query->andFilterWhere(['course_id' => $courseid,'teacher_id'=>$userid]);
+            else
+            $dataProvider->query->andFilterWhere(['course_id' => $courseid,'student_id'=>$userid]);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -67,7 +103,31 @@ class StudentJoinRequestsController extends Controller
      */
     public function actionCreate()
     {
+        // Only a student can create a student request
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to students only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'student'){
+				Yii::$app->session->setFlash('error', 'Access allowed to students only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = new StudentJoinRequests();
+        // $course_code=\Yii::$app->session->get('course_code');
+        // $model->course_code=$course_code;
         $model->status='pending';
         $model->date_sent=date('Y-m-d H:i:s');
         $model->course_id=\Yii::$app->request->get('course_id');
@@ -95,6 +155,28 @@ class StudentJoinRequestsController extends Controller
      */
     public function actionUpdate($idStudent_join_Requests)
     {
+        // Only a teacher can update status of a student request
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'student'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = $this->findModel($idStudent_join_Requests);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -115,6 +197,28 @@ class StudentJoinRequestsController extends Controller
      */
     public function actionDelete($idStudent_join_Requests)
     {
+        // Only a teacher can delete a student request
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'student'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $this->findModel($idStudent_join_Requests)->delete();
 
         return $this->redirect(['index']);

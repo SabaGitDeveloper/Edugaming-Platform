@@ -1,5 +1,4 @@
 <?php
-
 use backend\models\Courses;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -19,6 +18,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Courses', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php 
+        if (isset($_SESSION['user_id'])) { 
+            echo $_SESSION['user_id'];
+            echo $_SESSION['user_is'];
+        }
+        else 
+            echo "User is not logged in.";
+        ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\TeacherApprovalRequests;
 use backend\models\TeacherApprovalRequestsSearch;
 use yii\web\Controller;
@@ -38,9 +39,42 @@ class TeacherApprovalRequestsController extends Controller
      */
     public function actionIndex()
     {
+        // Only a moderator or teacher can view a student request
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to moderators and teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'moderator'&&$_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to moderators and teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
+        $courseid = Yii::$app->request->get('course_id');
+        $userid = Yii::$app->session->get('user_id');
+        $useris = Yii::$app->session->get('user_is');
+        if($courseid!==null){
+            Yii::$app->session->set('course_code',$courseid);
+        }
         $searchModel = new TeacherApprovalRequestsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
+        if ($courseid !== null) {
+            if($useris=='teacher')
+            $dataProvider->query->andFilterWhere(['course_id' => $courseid,'teacher_id'=>$userid]);
+            else
+            $dataProvider->query->andFilterWhere(['course_id' => $courseid,'Moderator_id'=>$userid]);
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -67,6 +101,29 @@ class TeacherApprovalRequestsController extends Controller
      */
     public function actionCreate()
     {
+        
+        // Only a teacher can create a teacher request
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = new TeacherApprovalRequests();
         $model->status='pending';
         $model->date_sent=date('Y-m-d H:i:s');
@@ -95,6 +152,28 @@ class TeacherApprovalRequestsController extends Controller
      */
     public function actionUpdate($idTeacher_Approval_Requests)
     {
+        // Only a moderator can update status of a teacher request
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to moderators only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'moderator'){
+				Yii::$app->session->setFlash('error', 'Access allowed to moderators only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = $this->findModel($idTeacher_Approval_Requests);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -115,6 +194,28 @@ class TeacherApprovalRequestsController extends Controller
      */
     public function actionDelete($idTeacher_Approval_Requests)
     {
+        //only moderator can delete teacher request
+        if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to moderators only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'moderator'){
+				Yii::$app->session->setFlash('error', 'Access allowed to moderators only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $this->findModel($idTeacher_Approval_Requests)->delete();
 
         return $this->redirect(['index']);

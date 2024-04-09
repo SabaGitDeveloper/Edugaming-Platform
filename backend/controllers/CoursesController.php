@@ -1,9 +1,13 @@
 <?php
 
 namespace backend\controllers;
-
+use Yii;
+use yii\helpers\Url;
 use backend\models\Courses;
 use backend\models\CoursesSearch;
+use backend\models\CourseStudentSearch;
+use backend\models\CourseTeacherSearch;
+use backend\models\CoursesModeratedSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -38,14 +42,51 @@ class CoursesController extends Controller
      */
     public function actionIndex()
     {
+        if (!isset($_SESSION['user_id'])) {
+            Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+            Yii::$app->user->logout();
+            return $this->goHome();
+        }
+
+        $userid = Yii::$app->session->get('user_id');
+        $useris = Yii::$app->session->get('user_is');
+    
         $searchModel = new CoursesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+
+        // Apply additional filtering based on user role
+        switch ($useris) {
+            case 'teacher':
+                $searchModelT = new CourseTeacherSearch();
+                $dataProviderT = $searchModelT->search($this->request->queryParams);
+                $dataProviderT->query->andFilterWhere(['Teacher_id' => $userid]);
+                // Assuming course_code is a column in CourseTeacher table
+                $dataProvider->query->andFilterWhere(['IN', 'course_code', $dataProviderT->query->select('Course_id')]);
+                break;
+        
+            case 'student':
+                $searchModelS = new CourseStudentSearch();
+                $dataProviderS = $searchModelS->search($this->request->queryParams);
+                $dataProviderS->query->andFilterWhere(['Student_id' => $userid]);
+                // Assuming course_code is a column in CourseStudent table
+                $dataProvider->query->andFilterWhere(['IN', 'course_code', $dataProviderS->query->select('CourseID')]);
+            break;
+        
+            case 'moderator':
+                $searchModelM = new CoursesModeratedSearch();
+                $dataProviderM = $searchModelM->search($this->request->queryParams);
+                $dataProviderM->query->andFilterWhere(['moderator_id' => $userid]);
+                // Assuming course_code is a column in CoursesModerated table
+                $dataProvider->query->andFilterWhere(['IN', 'course_code', $dataProviderM->query->select('course_id')]);
+                break;
+        }   
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
+
 
     /**
      * Displays a single Courses model.
@@ -67,6 +108,28 @@ class CoursesController extends Controller
      */
     public function actionCreate()
     {
+        // Only a teacher can create a course
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = new Courses();
 
         if ($this->request->isPost) {
@@ -91,6 +154,28 @@ class CoursesController extends Controller
      */
     public function actionUpdate($course_code)
     {
+         // Only a teacher can update a course
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = $this->findModel($course_code);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -111,6 +196,28 @@ class CoursesController extends Controller
      */
     public function actionDelete($course_code)
     {
+        // Only a teacher can delete a course
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $this->findModel($course_code)->delete();
 
         return $this->redirect(['index']);

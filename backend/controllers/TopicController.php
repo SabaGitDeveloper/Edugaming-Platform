@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\Topic;
 use backend\models\TopicSearch;
 use yii\web\Controller;
@@ -38,14 +39,23 @@ class TopicController extends Controller
      */
     public function actionIndex()
     {
+        $courseid = Yii::$app->request->get('course_code');
+        if($courseid!==null){
+            Yii::$app->session->set('course_code',$courseid);
+        }
         $searchModel = new TopicSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+    
+        if ($courseid !== null) {
+            $dataProvider->query->andFilterWhere(['course_code' => $courseid]);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
+
 
     /**
      * Displays a single Topic model.
@@ -67,8 +77,30 @@ class TopicController extends Controller
      */
     public function actionCreate()
     {
+        // Only a teacher can create a topic
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = new Topic();
-        $course_code=\Yii::$app->request->get('course_code');
+        $course_code=\Yii::$app->session->get('course_code');
         $model->course_code=$course_code;
 
         if ($this->request->isPost) {
@@ -93,6 +125,28 @@ class TopicController extends Controller
      */
     public function actionUpdate($topicID)
     {
+        // Only a teacher can update a topic
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $model = $this->findModel($topicID);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -113,6 +167,28 @@ class TopicController extends Controller
      */
     public function actionDelete($topicID)
     {
+        // Only a teacher can delete a topic
+		if (Yii::$app->user->isGuest) {
+			Yii::$app->session->setFlash('error', 'Access allowed after login.');
+            return $this->goHome();
+        }
+		
+		if(!isset($_SESSION['user_id'])){
+				Yii::$app->session->setFlash('error', 'Session Expired. Please login again.');
+				Yii::$app->user->logout();
+				return $this->goHome();
+		}
+		
+		if(!isset($_SESSION['user_is'])){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+		
+		if($_SESSION['user_is'] != 'teacher'){
+				Yii::$app->session->setFlash('error', 'Access allowed to teachers only.');
+				return $this->goHome();
+		}
+        //-------------------------------------------
         $this->findModel($topicID)->delete();
 
         return $this->redirect(['index']);

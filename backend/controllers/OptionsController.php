@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use backend\models\Options;
 use backend\models\OptionsSearch;
 use yii\web\Controller;
@@ -38,9 +39,16 @@ class OptionsController extends Controller
      */
     public function actionIndex()
     {
+        $qNo=Yii::$app->request->get('QuestionNo');
+        if($qNo!==null){
+            Yii::$app->session->set('QuestionNo',$qNo);
+        }
         $searchModel = new OptionsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        if($qNo!==null){
+            $dataProvider->query->andFilterWhere(['questionNo'=>$qNo]);
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -68,6 +76,8 @@ class OptionsController extends Controller
     public function actionCreate()
     {
         $model = new Options();
+        $qNo=\Yii::$app->session->get('QuestionNo');
+        $model->questionNo=$qNo;
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {

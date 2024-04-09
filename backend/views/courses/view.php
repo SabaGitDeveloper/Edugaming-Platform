@@ -38,12 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-        <?= Html::a('View Topics', ['topic/create', 'course_code' => $model->course_code], ['class' => 'btn btn-success']) ?>
-    </p>
-    <p>
-        <?= Html::a('Send Student Join Request', ['/student-join-requests/create','course_id' => $model->course_code,'teacher_id'=>$teacherId], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Send Teacher Approval Request', ['/teacher-approval-requests/create','course_id' => $model->course_code,'moderator_id'=>$ModeratorId], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Send Modetrator Approval Request', ['/moderator-approval-requests/create','course_id' => $model->course_code,'admin_id'=>$AdminId], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('View Topics', ['topic/index', 'course_code' => $model->course_code], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('View GameAssignments', ['game-assignments/index', 'course_code' => $model->course_code], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -55,4 +51,20 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <p>
+            <?= Html::a('Send Student Join Request', ['/student-join-requests/create','course_id' => $model->course_code,'teacher_id'=>$teacherId], ['class' => 'btn btn-link']) ?>
+            <?= Html::a('Send Teacher Approval Request', ['/teacher-approval-requests/create','course_id' => $model->course_code,'moderator_id'=>$ModeratorId], ['class' => 'btn btn-link']) ?>
+            <?= Html::a('Send Moderator Approval Request', ['/moderator-approval-requests/create','course_id' => $model->course_code,'admin_id'=>$AdminId], ['class' => 'btn btn-link']) ?>
+        </p>
+    </div>
+    <div class="col-md-4">
+        <p>
+            <?= Html::a('View Student Join Request', ['/student-join-requests/index','course_id' => $model->course_code,'teacher_id'=>$teacherId], ['class' => 'btn btn-link']) ?>
+            <?= Html::a('View Teacher Approval Request', ['/teacher-approval-requests/index','course_id' => $model->course_code,'moderator_id'=>$ModeratorId], ['class' => 'btn btn-link']) ?>
+            <?= Html::a('View Moderator Approval Request', ['/moderator-approval-requests/index','course_id' => $model->course_code,'admin_id'=>$AdminId], ['class' => 'btn btn-link']) ?>
+        </p>
+    </div>
 </div>

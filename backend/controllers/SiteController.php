@@ -8,6 +8,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
+use common\models\User;
 
 /**
  * Site controller
@@ -80,6 +81,21 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            //added by me started
+            $modelUser = User::findOne(Yii:: $app->user->getId());
+			$_SESSION['user_id'] = $modelUser->id;
+			$_SESSION['user_name'] = $modelUser->username;
+			if ($modelUser->is_teacher=='y')
+				$_SESSION['user_is'] = 'teacher';
+            else if ($modelUser->is_design_admin=='y')
+				$_SESSION['user_is'] = 'gameadmin';
+            else if ($modelUser->is_moderator=='y')
+				$_SESSION['user_is'] = 'moderator';
+            else if ($modelUser->is_student=='y')
+				$_SESSION['user_is'] = 'student';
+			else
+				$_SESSION['user_is'] = 'systemadmin';
+            //added by me ended
             return $this->goBack();
         }
 
