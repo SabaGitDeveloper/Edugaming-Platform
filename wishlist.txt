@@ -12,3 +12,4 @@
 -take a look at the game interface and resource tables to see if correct attributes and datatypes
 -instead of blocking access for other users to create and update course buttons, just change theor view so this button is never shown to them
 -can this also be done by creating a db view of student?
+ 

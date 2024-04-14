@@ -41,6 +41,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'student/courses' => 'student/courses', /added by saba
             ],
         ],
         */

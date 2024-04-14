@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'game_mode',
             'interface_type',
             'question_setID',
+            'topicId',  //added by saba
         ],
     ]) ?>
 

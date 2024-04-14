@@ -17,7 +17,7 @@ class GameAssignmentsSearch extends GameAssignments
     public function rules()
     {
         return [
-            [['assignmentID', 'assigned_by', 'interface_type', 'question_setID'], 'integer'],
+            [['assignmentID', 'assigned_by', 'interface_type', 'question_setID','topicId'], 'integer'],
             [['course_code', 'date_assigned', 'due_date', 'game_mode'], 'safe'],
         ];
     }
@@ -62,12 +62,15 @@ class GameAssignmentsSearch extends GameAssignments
             'assigned_by' => $this->assigned_by,
             'interface_type' => $this->interface_type,
             'question_setID' => $this->question_setID,
+            'date_assigned' => $this->date_assigned,
+            'due_date' => $this->due_date,
+            'topicId' => $this->topicId,    //added by saba last 3 conditions
         ]);
 
         $query->andFilterWhere(['like', 'course_code', $this->course_code])
-            ->andFilterWhere(['like', 'date_assigned', $this->date_assigned])
-            ->andFilterWhere(['like', 'due_date', $this->due_date])
-            ->andFilterWhere(['like', 'game_mode', $this->game_mode]);
+            ->andFilterWhere(['like', 'date_assigned', $this->date_assigned]);
+            // ->andFilterWhere(['like', 'due_date', $this->due_date])
+            // ->andFilterWhere(['like', 'game_mode', $this->game_mode]);
 
         return $dataProvider;
     }

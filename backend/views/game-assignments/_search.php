@@ -30,6 +30,7 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'interface_type') ?>
 
     <?php // echo $form->field($model, 'question_setID') ?>
+    <?php // echo $form->field($model, 'topicId') ?>    <!--added by saba->
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

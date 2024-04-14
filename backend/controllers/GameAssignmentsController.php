@@ -39,16 +39,16 @@ class GameAssignmentsController extends Controller
      */
     public function actionIndex()
     {
-        $courseid = Yii::$app->request->get('course_code');
-        if($courseid!==null){
-            Yii::$app->session->set('course_code',$courseid);
-        }
+        // $courseid = Yii::$app->request->get('course_code');
+        // if($courseid!==null){
+        //     Yii::$app->session->set('course_code',$courseid);
+        // }
         $searchModel = new GameAssignmentsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        if ($courseid !== null) {
-            $dataProvider->query->andFilterWhere(['course_code' => $courseid]);
-        }
+        // if ($courseid !== null) {
+        //     $dataProvider->query->andFilterWhere(['course_code' => $courseid]);
+        // }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -98,12 +98,17 @@ class GameAssignmentsController extends Controller
 		}
         //-------------------------------------------
         $model = new GameAssignments();
-        $model->date_assigned=date('Y-m-d H:i:s');
-        $model->course_code=\Yii::$app->request->get('course_code');
-        $model->assigned_by=\Yii::$app->session->get('user_id');
+        // $model->date_assigned=date('Y-m-d H:i:s');
+        // $model->course_code=\Yii::$app->request->get('course_code');
+        // $model->assigned_by=\Yii::$app->session->get('user_id');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                //--------------added by saba-----
+                $model->date_assigned = date('Y-m-d'); // Assign current date
+                $dueDate = date('Y-m-d', strtotime('+7 days', strtotime($model->date_assigned))); // Calculate due date
+                $model->due_date = $dueDate; // Assign due date  
+                //----end of addition-----------  
                 return $this->redirect(['view', 'assignmentID' => $model->assignmentID]);
             }
         } else {

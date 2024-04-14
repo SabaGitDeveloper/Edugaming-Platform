@@ -14,18 +14,21 @@ use yii\widgets\ActiveForm;
 
     <!--<?= $form->field($model, 'course_code')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'assigned_by')->textInput() ?>
+    <?= $form->field($model, 'assigned_by')->textInput() ?>-->  <!--was already commented out by me-->
 
-    <?= $form->field($model, 'date_assigned')->textInput(['maxlength' => true]) ?>-->
+    <!--<?= $form->field($model, 'date_assigned')->textInput(['maxlength' => true]) ?>-->
 
-    <?= $form->field($model, 'due_date')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'due_date')->textInput(['maxlength' => true]) ?> 
 
-    <?= $form->field($model, 'game_mode')->textInput(['maxlength' => true]) ?>
+    <!--<?= $form->field($model, 'game_mode')->textInput(['maxlength' => true]) ?>-->
 
     <?= $form->field($model, 'interface_type')->textInput() ?>
 
     <?= $form->field($model, 'question_setID')->textInput() ?>
-
+    <!-- additions by saba -->
+    <?= $form->field($model, 'game_mode')->dropDownList([ 'learning' => 'Learning', 'quiz' => 'Quiz', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'topicId')->textInput() ?>
+    
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
