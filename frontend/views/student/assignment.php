@@ -11,6 +11,7 @@ $this->title = 'Assignments';
 ?>
 <div class="site-courses">
     <div class="row">
+        xxx
         <div class="col-md-12">
             <h1><?= Html::encode($this->title) ?></h1>
         </div>
