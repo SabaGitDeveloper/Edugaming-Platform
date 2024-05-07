@@ -14,9 +14,11 @@ use Yii;
  *
  * @property Options[] $options
  * @property QuestionSet $questionSet
+ * @property string|null $comments 
  */
 class Questions extends \yii\db\ActiveRecord
 {
+    public $comments;
     /**
      * {@inheritdoc}
      */
@@ -32,6 +34,7 @@ class Questions extends \yii\db\ActiveRecord
     {
         return [
             [['QuestionNo'], 'required'],
+            [['QuestionNo', 'comments'], 'string'],
             [['QuestionNo', 'QuestionSet'], 'integer'],
             [['QuestionStatement'], 'string', 'max' => 100],
             [['Hints'], 'string', 'max' => 45],

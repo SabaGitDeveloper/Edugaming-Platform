@@ -95,11 +95,19 @@ class SiteController extends Controller
             //return $this->goBack();
             //-----added by saba--------
             $user = User::findOne(['username' => $model->username]);
+            Yii::$app->session->set('user_id', Yii::$app->user->id);
+            Yii::$app->session->set('username', $model->username);
             if ($user && $user->is_student === 'y') {
-                Yii::$app->session->set('user_id', Yii::$app->user->id);
-                Yii::$app->session->set('username', $model->username);
                 Yii::$app->session->set('role', 'student');
-                return $this->render('/student/Student-index.php');
+                return $this->render('sdashboard');
+            }
+            if ($user && $user->is_moderator === 'y') {
+                Yii::$app->session->set('role', 'moderator');
+                return $this->render('mdashboard');
+            }
+            if ($user && $user->is_system_admin === 'y') {
+                Yii::$app->session->set('role', 'sysadmin');
+                return $this->render('adashboard');
             }
             //------end of added--------------
         }
@@ -154,6 +162,18 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+    public function actionSdashboard()
+    {
+        return $this->render('sdashboard');
+    }
+    public function actionMdashboard()
+    {
+        return $this->render('mdashboard');
+    }
+    public function actionAdashboard()
+    {
+        return $this->render('adashboard');
     }
 
     /**

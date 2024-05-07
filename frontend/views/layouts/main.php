@@ -9,7 +9,8 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
-
+$userId = Yii::$app->session->get('user_id');
+$role=Yii::$app->session->get('role');
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -42,6 +43,14 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
     }
+    if ($userId!=null) {
+        if($role=='student')
+        $menuItems[] = ['label' => 'Dashboard', 'url' => ['/site/sdashboard']];
+        else if($role=='moderator')
+        $menuItems[] = ['label' => 'Dashboard', 'url' => ['/site/mdashboard']];
+        else if($role==='sysadmin')
+        $menuItems[] = ['label' => 'Dashboard', 'url' => ['/site/adashboard']];
+    }
 
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
@@ -60,7 +69,6 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 </header>
-
 <main role="main" class="flex-shrink-0">
     <div class="container">
         <?= Breadcrumbs::widget([
@@ -75,6 +83,18 @@ AppAsset::register($this);
     <div class="container">
         <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
         <p class="float-end"><?= Yii::powered() ?></p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="footer-links">
+                    <li><?= Html::a('About Us', ['/site/about']) ?></li>
+                    <li><?= Html::a('Contact Us', ['/site/contact']) ?></li>
+                    <!-- Add more links as needed -->
+                </ul>
+            </div>
+        </div>
     </div>
 </footer>
 

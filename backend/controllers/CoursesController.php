@@ -68,7 +68,6 @@ class CoursesController extends Controller
                 $searchModelS = new CourseStudentSearch();
                 $dataProviderS = $searchModelS->search($this->request->queryParams);
                 $dataProviderS->query->andFilterWhere(['Student_id' => $userid]);
-                // Assuming course_code is a column in CourseStudent table
                 $dataProvider->query->andFilterWhere(['IN', 'course_code', $dataProviderS->query->select('CourseID')]);
             break;
         
@@ -76,7 +75,6 @@ class CoursesController extends Controller
                 $searchModelM = new CoursesModeratedSearch();
                 $dataProviderM = $searchModelM->search($this->request->queryParams);
                 $dataProviderM->query->andFilterWhere(['moderator_id' => $userid]);
-                // Assuming course_code is a column in CoursesModerated table
                 $dataProvider->query->andFilterWhere(['IN', 'course_code', $dataProviderM->query->select('course_id')]);
                 break;
         }   

@@ -52,4 +52,8 @@ class StudentController extends Controller
     {
         return $this->render('/student/assgall.php');
     }
+    public function actionNewrequest()
+    {
+        return $this->render('/student/newrequest.php');
+    }
 }

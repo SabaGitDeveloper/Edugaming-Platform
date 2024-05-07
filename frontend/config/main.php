@@ -36,15 +36,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
+       /* 'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'student/courses' => 'student/courses', /added by saba
+                'custom-url' => '../../../backend/views/courses/index',
             ],
-        ],
-        */
+        ],*/
+        
     ],
     'params' => $params,
 ];
