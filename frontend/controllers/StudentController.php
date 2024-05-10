@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use yii\web\Controller;
 use backend\models\Options;
+use backend\models\StudentJoinRequests;
 class StudentController extends Controller
 {
  
@@ -38,7 +39,7 @@ class StudentController extends Controller
         }
         return $this->render('/student/result.php', ['score' => $score, 'totalQuestions' => $totalQuestions]);
     }
-    public function actionRequests()
+    public function actionRequest()
     {
         return $this->render('/student/request.php');
     }
@@ -55,5 +56,27 @@ class StudentController extends Controller
     public function actionNewrequest()
     {
         return $this->render('/student/newrequest.php');
+    }
+    public function actionCreaterequest()
+    {
+        $model = new StudentJoinRequests();
+        $model->status='pending';
+        $model->date_sent=date('Y-m-d H:i:s');
+        $model->course_id=\Yii::$app->request->get('cid');
+        $model->student_id=\Yii::$app->session->get('user_id');
+        $model->teacher_id=10;
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['student/request', 'idStudent_join_Requests' => $model->idStudent_join_Requests]);
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        return $this->render('createrequest', [
+            'model' => $model,
+        ]);
+       // return $this->render('/moderator/createrequest.php');
     }
 }

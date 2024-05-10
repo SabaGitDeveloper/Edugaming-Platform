@@ -47,7 +47,7 @@ class StudentJoinRequests extends \yii\db\ActiveRecord
             [['firstname', 'lastname'], 'string', 'max' => 45],
             [['phoneNo'], 'string', 'max' => 20],
             [['idStudent_join_Requests'], 'unique'],
-            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseTeacher::class, 'targetAttribute' => ['teacher_id' => 'idCourse_Teacher']],
+            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => Teacher::class, 'targetAttribute' => ['teacher_id' => 'memberID']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['course_id' => 'course_code']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['student_id' => 'memberID']],
         ];

@@ -7,6 +7,7 @@ use yii\web\Controller;
 use backend\models\Questions;
 use backend\models\QuestionSet;
 use backend\models\TeacherApprovalRequests;
+use backend\models\ModeratorApprovalRequests;
 use backend\models\CourseTeacher;
 
 class ModeratorController extends Controller
@@ -104,7 +105,7 @@ class ModeratorController extends Controller
             return $this->render('/site/mdashboard');
         }
     }
-    public function actionRequests()
+    public function actionRequest()
     {
         return $this->render('/moderator/request.php');
     }
@@ -115,26 +116,29 @@ class ModeratorController extends Controller
     }
 
     public function actionNewrequest()
-    {//copied from actionCreate() of moderapprovalrequestscontroller
-        //one idea is to copy the _form.php and create.php files in here to carryout the process or access the backend folder
-        //same code will get copied for studentrequest and maybe delete sendrequest.php from both
+    {
+        return $this->render('/moderator/newrequest.php');
+    }
+    public function actionCreaterequest()
+    {
         $model = new ModeratorApprovalRequests();
         $model->status='pending';
         $model->date_sent=date('Y-m-d H:i:s');
-        $model->course_id=\Yii::$app->request->get('course_id');
-        $model->moderator_id=\Yii::$app->request->get('admin_id');
+        $model->course_id=\Yii::$app->request->get('cid');
+        $model->moderator_id=\Yii::$app->session->get('user_id');
+        $model->admin_id=21;
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'idModerator_Approval_Requests' => $model->idModerator_Approval_Requests]);
+                return $this->redirect(['moderator/request', 'idModerator_Approval_Requests' => $model->idModerator_Approval_Requests]);
             }
         } else {
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', [
+        return $this->render('createrequest', [
             'model' => $model,
         ]);
-        //return $this->render('/moderator/newrequest.php');
+       // return $this->render('/moderator/createrequest.php');
     }
 }

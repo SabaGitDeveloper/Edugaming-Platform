@@ -29,7 +29,7 @@ $this->title = 'Moderator-Dashboard';
                     <h3 class="panel-title">Requests</h3>
                 </div>
                 <div class="panel-body">
-                    <p><?= Html::a('View Requests', ['moderator/requests'], ['class' => 'btn btn-primary']) ?></p>
+                    <p><?= Html::a('View Requests', ['moderator/request'], ['class' => 'btn btn-primary']) ?></p>
                 </div>
             </div>
         </div>

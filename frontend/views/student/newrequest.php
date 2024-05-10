@@ -3,6 +3,7 @@
 /** @var yii\web\View  $this  */
 use backend\models\Courses;
 use backend\models\CourseStudent;
+use backend\models\StudentJoinRequests;
 use yii\helpers\Html;
 // Get the request object
 $userId = Yii::$app->session->get('user_id');
@@ -10,6 +11,11 @@ $courses= CourseStudent::find()->where(['Student_ID' => $userId])->all();
 $newCourses = Courses::find()
     ->where(['not in', 'id', array_column($courses, 'id')])
     ->all();
+$previousRequested = StudentJoinRequests::find()
+    ->where(['student_id' => $userId])
+    ->andWhere(['status' => 'pending'])
+    ->select('course_id')
+    ->column();
 $this->title = 'New Courses';
 ?>
 <div class="site-courses">
@@ -23,6 +29,10 @@ $this->title = 'New Courses';
             $code=$nc->course_code;
             $title=$nc->course_name;
             $descrip=$nc->course_description;
+            // Skip the course if it's already requested by the moderator
+            if (in_array($code, $previousRequested)) {
+                continue;
+            }
             ?>
             <div class="col-md-4">
                 <div class="panel panel-default">
@@ -37,7 +47,7 @@ $this->title = 'New Courses';
                         <p><?php echo "Course Details: ".$descrip ?></p>
                         <p>
                             <?php if ($newCourses !== null): ?>
-                            <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> Send Request-->', ['/courses/create', 'cid' => $code], ['class' => 'btn btn-default']) ?>
+                            <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> Send Request-->', ['/student/createrequest', 'cid' => $code], ['class' => 'btn btn-default']) ?>
                             <?php endif; ?>
                         </p>
                     </div>
