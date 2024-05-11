@@ -34,6 +34,6 @@ $this->title = 'Topics';
                 </div>
             </div>
         <?php endforeach; ?>
-        <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> Create New Topic', ['assignment', 'id' => $topicid], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> Create New Topic', ['topic/create', 'id' => $topicid], ['class' => 'btn btn-primary']) ?>
     </div>
 </div>

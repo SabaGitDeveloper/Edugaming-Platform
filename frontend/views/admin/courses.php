@@ -36,6 +36,6 @@ $this->title = 'Your Courses';
                 </div>
             </div>
         <?php endforeach; ?>
-        <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> Add New Course', ['topic', 'id' => $courseid], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> Add New Course', ['courses/create'], ['class' => 'btn btn-primary']) ?>
     </div>
 </div>

@@ -7,4 +7,6 @@
 -//jab tk uski request approve ni hoti wo simple welcome page aur kuch functionalities like play sample game etc use kr skta? approve hony k baad personalized dashboard ai ga
 -instead of blocking access for other users to create and update course buttons, just change theor view so this button is never shown to them
 -can this also be done by creating a db view of student?
- 
+ -more than one moderator allowed or not?
+ -student ko request place karte waqt pehle saare teachers show ho us course ke phir request place kare against some teacher-course
+ -later remove admin from signup pehle se hi ho

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var backend\models\CoursesSearch $model */
+/** @var app\models\CoursesSearch $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
@@ -20,10 +20,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'course_name') ?>
 
     <?= $form->field($model, 'course_description') ?>
-
-    <?= $form->field($model, 'SubjectId') ?>
-
-    <?= $form->field($model, 'coursescol') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

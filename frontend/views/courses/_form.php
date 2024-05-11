@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var backend\models\Courses $model */
+/** @var app\models\courses $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
@@ -17,10 +17,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'course_name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'course_description')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'SubjectId')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'coursescol')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

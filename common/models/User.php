@@ -18,6 +18,7 @@ use yii\web\IdentityInterface;
  * @property string $is_system_admin
  * @property string $is_design_admin
  * @property string $is_moderator
+ * @property string $user_type
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $verification_token
@@ -61,6 +62,8 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['user_type'], 'safe'],//added by sundas
+            ['user_type', 'in', 'range' => ['admin', 'student', 'teacher', 'moderator']],//added by sundas
         ];
     }
 

@@ -13,7 +13,7 @@ $newCourses = Courses::find()
     ->all();
 $previousRequested = ModeratorApprovalRequests::find()
     ->where(['moderator_id' => $userId])
-    ->andWhere(['status' => 'pending'])
+    ->andWhere(['IN', 'status', ['pending', 'approved']])
     ->select('course_id')
     ->column();
 $this->title = 'New Courses';

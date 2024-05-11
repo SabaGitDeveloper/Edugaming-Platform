@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var backend\models\Courses $model */
+/** @var app\models\courses $model */
 
 $this->title = $model->course_code;
 $this->params['breadcrumbs'][] = ['label' => 'Courses', 'url' => ['index']];
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= Html::a('Create Topic', ['topic/create', 'course_code' => $model->course_code], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Check Students', ['course-students','course_code' => $model->course_code], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Update', ['update', 'course_code' => $model->course_code], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'course_code' => $model->course_code], [
             'class' => 'btn btn-danger',
@@ -32,8 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'course_code',
             'course_name',
             'course_description:ntext',
-            'SubjectId',
-            'coursescol',
         ],
     ]) ?>
 

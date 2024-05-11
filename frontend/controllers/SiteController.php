@@ -76,7 +76,20 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        // if (!Yii::$app->user->isGuest) {
+        //     //Yii::$app->user->identity->user_type === 'teacher' added by sundus and muneeba
+        //     if (Yii::$app->user->user_type === 'teacher') {
+        //         Yii::$app->session->set('role', 'teacher');
+        //         return $this->redirect(['teacher/index']);
+        //     } else {
+        //         // Handle other user types or unauthorized access
+        //         return $this->goBack();
+        //     }
+        // } else {
+        //     // Redirect to login if user is not authenticated
+        //     return $this->redirect(['login']);
+        // }
+       return $this->render('index');
     }
 
     /**
@@ -97,19 +110,27 @@ class SiteController extends Controller
             $user = User::findOne(['username' => $model->username]);
             Yii::$app->session->set('user_id', Yii::$app->user->id);
             Yii::$app->session->set('username', $model->username);
-            if ($user && $user->is_student === 'y') {
+            if ($user && $user->user_type === 'student') {
                 Yii::$app->session->set('role', 'student');
                 return $this->render('sdashboard');
             }
-            if ($user && $user->is_moderator === 'y') {
+            if ($user && $user->user_type === 'moderator') {
                 Yii::$app->session->set('role', 'moderator');
                 return $this->render('mdashboard');
             }
-            if ($user && $user->is_system_admin === 'y') {
+            if ($user && $user->user_type === 'admin') {
                 Yii::$app->session->set('role', 'sysadmin');
                 return $this->render('adashboard');
             }
             //------end of added--------------
+            //added by muneeba---------
+            if (Yii::$app->user->identity->user_type === 'teacher') {
+                Yii::$app->session->set('role', 'teacher');
+                return $this->redirect(['teacher/index']);
+            } else {
+                // Handle other user types or unauthorized access
+                return $this->goBack();
+            }
         }
 
         $model->password = '';

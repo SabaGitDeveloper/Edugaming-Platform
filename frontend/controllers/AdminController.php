@@ -6,6 +6,8 @@ use Yii;
 use yii\web\Controller;
 use backend\models\ModeratorApprovalRequests;
 use backend\models\CoursesModerated;
+use backend\models\Courses;
+
 class AdminController extends Controller
 {
  
@@ -48,28 +50,7 @@ class AdminController extends Controller
     {
         return $this->render('/admin/topic.php');
     }
-    /*public function actionAssignment()
-    {
-        return $this->render('/admin/assignment.php');
-    }
-    public function actionQuiz()
-    {
-        return $this->render('/admin/quiz.php');
-    }
-    public function actionSubmit()
-    {
-        $submittedAnswers = \Yii::$app->request->post('answers');
-        $correctAnswers = \Yii::$app->request->post('correctAnswers');
-        $score = 0;
-        $totalQuestions = 0;
-        foreach ($submittedAnswers as $questionNo => $submittedAnswer) {
-            $totalQuestions++;
-            if ($submittedAnswer == $correctAnswers[$questionNo]) {
-                $score++;
-            }
-        }
-        return $this->render('/admin/result.php', ['score' => $score, 'totalQuestions' => $totalQuestions]);
-    }*/
+    
     public function actionRequests()
     {
         return $this->render('/admin/request.php');
@@ -79,9 +60,5 @@ class AdminController extends Controller
     {
         return $this->render('notifications');
     }
-//again need to backend crud for moderator 
-    /*public function actionAssgall()
-    {
-        return $this->render('/admin/assgall.php');
-    }*/
+
 }

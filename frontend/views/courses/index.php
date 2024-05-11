@@ -7,7 +7,7 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var backend\models\CoursesSearch $searchModel */
+/** @var app\models\CoursesSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Courses';
@@ -21,25 +21,19 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Courses', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'course_code',
-            'course_name',
-            'course_description:ntext',
-            'SubjectId',
-            'coursescol',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Courses $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'course_code' => $model->course_code]);
-                 }
+                'attribute' => 'course_code',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->course_code, ['topics/index', 'course_code' => $model->course_code]);
+                },
             ],
+            'course_name',
         ],
     ]); ?>
 
