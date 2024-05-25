@@ -1,0 +1,222 @@
+<?php
+
+/** @var yii\web\View  $this  */
+use backend\models\GameAssignments;
+use backend\models\CourseStudent;
+use backend\models\Studentgameassignment;
+use yii\helpers\Html;
+// Get the request object
+$userId = Yii::$app->session->get('user_id');
+$StudentCourses = CourseStudent::find()->where(['Student_ID' => $userId])->all();
+$this->title = 'Progress';
+$score=0;
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0">
+    <title>Bootstrap5 Sidebar</title>
+    <link href=
+"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" 
+          rel="stylesheet"
+        integrity=
+"sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" 
+          crossorigin="anonymous">
+    <link rel="stylesheet" 
+          href="style.css">
+    <link rel="stylesheet" href=
+"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity=
+"sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" 
+        referrerpolicy="no-referrer" />
+</head>
+<style>
+  html, body {
+    height: 100%;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.gfg {
+    height: 50px;
+    width: 50px;
+
+}
+
+.mynav {
+    color: #fff;
+}
+
+.mynav li a {
+    color: #fff;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    padding: 8px 5px;
+}
+
+.mynav li a.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mynav li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mynav li a i {
+    width: 25px;
+    text-align: center;
+}
+
+.notification-badge {
+    background-color: rgba(255, 255, 255, 0.7);
+    float: right;
+    color: #222;
+    font-size: 14px;
+    padding: 0px 8px;
+    border-radius: 2px;
+}
+</style>
+<body>
+    <div class="container-fluid p-0 d-flex h-100">
+        <div id="bdSidebar" 
+             class="d-flex flex-column 
+                    flex-shrink-0 
+                    p-3 bg-success
+                    text-white offcanvas-md offcanvas-start">
+            <a href="#" 
+               class="navbar-brand">
+            </a><hr>
+            <ul class="mynav nav nav-pills flex-column mb-auto">
+            <li class="nav-item mb-1" style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-user" style="margin-right: 9px; margin-left: 8px;"></i>
+                        <?= Html::a('Progress', ['/student/progress'], ['style' => 'text-decoration: none;']) ?>
+                </li>
+
+                <li class="nav-item mb-1" style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-bookmark" style="margin-right: 11px; margin-left: 8px;"></i>
+                        <?= Html::a('Assignments', ['/student/assgall'], ['style' => 'text-decoration: none;']) ?>
+                </li>
+                <li class="nav-item mb-1" style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-newspaper" style="margin-right: 7px; margin-left: 8px;"></i>
+                        <?= Html::a('Requests', ['/student/request'], ['style' => 'text-decoration: none;']) ?>
+                </li>
+                <li class="nav-item mb-1" style="display: flex; align-items: center;">
+                       <i class="fa-solid fa-archway" style="margin-right: 7px; margin-left: 8px;"></i>
+                       <?= Html::a('Courses', ['/student/courses'], ['style' => 'text-decoration: none;']) ?>
+                </li>
+                <li class="sidebar-item  nav-item mb-1">
+                    <a href="#" 
+                       class="sidebar-link collapsed" 
+                       data-bs-toggle="collapse"
+                       data-bs-target="#settings"
+                       aria-expanded="false"
+                       aria-controls="settings">
+                        <i class="fas fa-cog pe-2"></i>
+                        <span class="topic">Settings </span>
+                    </a>
+                    <ul id="settings" 
+                        class="sidebar-dropdown list-unstyled collapse" 
+                        data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-user-plus pe-2"></i>
+                                <span class="topic">Switch Profile</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">
+                                <i class="fas fa-sign-out-alt pe-2"></i>
+                                <span class="topic">Log Out</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <hr>
+            <div class="d-flex">
+                <i class="fa-solid fa-book  me-2"></i>
+                <span>
+                    <h6 class="mt-1 mb-0">
+                          EduGaming Platform
+                      </h6>
+                </span>
+            </div>
+        </div>
+        <div class="bg-light flex-fill">
+            <div class="p-2 d-md-none d-flex text-white bg-success">
+                <a href="#" class="text-white" 
+                   data-bs-toggle="offcanvas"
+                   data-bs-target="#bdSidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </a>
+                <span class="ms-3">EduGaming Portal</span>
+            </div>
+            <div class="p-4">
+            <h1><?= Html::encode($this->title) ?></h1>
+                <hr>
+    <table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col"><span style="margin-left: 12px;">Id</span></th>
+        <th scope="col"><span style="margin-left: 14px;">total</span></th>
+        <th scope="col"><span style="margin-left: 14px;">Pending</span></th>
+        <th scope="col"><span style="margin-left: 14px;">Completed</span></th>
+        <th scope="col"><span style="margin-left: 14px;">Skipped</span></th>
+        <th scope="col"><span style="margin-left: 14px;">Progress</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php 
+    foreach ($StudentCourses as $stc){
+        $coursecode=$stc->CourseID;
+        $assignments = GameAssignments::find()->where(['course_code' => $coursecode])->all();
+        $total = GameAssignments::find()->where(['course_code' => $coursecode])->count();
+        $pending=0;
+        $completed=0;
+        $expired=0;
+    foreach ($assignments as $assignment):
+            $assignmentid=$assignment->assignmentID;
+            $AssignmentScore= Studentgameassignment::find()->where(['AssignmentId' => $assignmentid])->one();
+            $tries=$AssignmentScore->tries;
+            $coursecode=$assignment->course_code;
+            $duedate=$assignment->due_date;
+            $expiryDate=strtotime($duedate);
+            $currentDate = time();
+            if ($currentDate < $expiryDate && $tries==0){
+                $pending++;
+            }
+            else if ($currentDate > $expiryDate && $tries==0){
+                $expired++;
+            }
+            else{
+               $completed++; 
+            }
+            ?>
+                <tr>
+                    <th scope="row"><span style="margin-left: 12px;"><?php echo $coursecode; ?></span></th>
+                    <td><span style="margin-left: 12px; color: blue;"><?php echo $total;?></span></td>
+                    <td><span style="margin-left: 12px; color: red;"><?php echo $pending;?></span></td>
+                    <td><span style="margin-left: 12px; color: green;"><?php echo $completed;?></span></td>
+                    <td><span style="margin-left: 12px; color: red;"><?php echo $expired;?></span></td>
+                    <td>
+                        <div class="progress">
+                        <?php $progress= $completed/$total*100;?>
+                          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progress; ?>%;">
+                            <span> <?php echo $progress."%";?> </span>
+                          </div>
+                        </div> 
+                    </td>
+                </tr>
+        <?php endforeach; }?>
+    </tbody>
+    </table>
+</div>
+</div>
+</body>
+</html>

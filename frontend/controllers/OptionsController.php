@@ -36,15 +36,20 @@ class OptionsController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($questionNo)
     {
         $searchModel = new OptionsSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $model=new Options();
+        $model->questionNo=$questionNo;
+        $dataProvider = $searchModel->search(array_merge($this->request->queryParams,['OptionsSearch' => [ 'questionNo' => $questionNo]]));
+
 
         return $this->render('index', [
+            'model'=>$model,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+
     }
 
     /**

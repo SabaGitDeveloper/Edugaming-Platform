@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use backend\models\Teacher;
 
 /**
  * Signup form
@@ -14,6 +15,7 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $user_type;
 
 
     /**
@@ -35,7 +37,9 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
-        ];
+            ['user_type', 'required'],
+
+          ];
     }
 
     /**
@@ -48,15 +52,29 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
+        $user->status = User::STATUS_ACTIVE;
+        $user->user_type = $this->user_type;
 
-        return $user->save() && $this->sendEmail($user);
+        if ($user->save()) {
+            if ($user->user_type === 'teacher') {
+                $teacherModel = new Teacher();
+                $teacherModel->memberID = $user->id;
+                if (!$teacherModel->save()) {
+                    $user->delete(); // Rollback user creation if teacher saving fails
+                    return null;
+                }
+            }
+            return $this->sendEmail($user);
+        }
+
+        return null;
     }
 
     /**

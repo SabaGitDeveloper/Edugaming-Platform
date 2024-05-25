@@ -47,7 +47,7 @@ $this->title = 'New Courses';
                         <p><?php echo "Course Details: ".$descrip ?></p>
                         <p>
                             <?php if ($newCourses !== null): ?>
-                            <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> Send Request-->', ['/student/createrequest', 'cid' => $code], ['class' => 'btn btn-default']) ?>
+                            <?= Html::a('<span class="glyphicon glyphicon-info-sign"></span> View Teachers-->', ['/student/course-teachers', 'course_code' => $code], ['class' => 'btn btn-default']) ?>
                             <?php endif; ?>
                         </p>
                     </div>

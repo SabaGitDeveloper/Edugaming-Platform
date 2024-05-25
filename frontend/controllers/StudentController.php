@@ -2,9 +2,17 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use yii\web\Controller;
 use backend\models\Options;
 use backend\models\StudentJoinRequests;
+use backend\models\StudentGameAssignment;
+use backend\models\Courses;
+use backend\models\CourseTeacher;
+use backend\models\Teacher;
+use common\models\User;
+
+
 class StudentController extends Controller
 {
  
@@ -29,6 +37,8 @@ class StudentController extends Controller
     {
         $submittedAnswers = \Yii::$app->request->post('answers');
         $correctAnswers = \Yii::$app->request->post('correctAnswers');
+        $assignmentid = \Yii::$app->request->post('assignmentid');
+        $clicks=\Yii::$app->request->post('clicks');
         $score = 0;
         $totalQuestions = 0;
         foreach ($submittedAnswers as $questionNo => $submittedAnswer) {
@@ -37,7 +47,20 @@ class StudentController extends Controller
                 $score++;
             }
         }
-        return $this->render('/student/result.php', ['score' => $score, 'totalQuestions' => $totalQuestions]);
+        $model = StudentGameAssignment::find()->where(['AssignmentId' => $assignmentid])->one();
+        // Check if the model is null
+        if ($model === null) {
+            // Log or display an error message
+            \Yii::error('Unable to find Studentgameassignment model with assignment ID: ' . $assignmentid);
+        }
+        else{
+        $clicks=$model->tries;
+        $model->Accuracy = $score / $totalQuestions * 100;
+        $model->Speed = 0;
+        $model->tries = ++$clicks;
+        $model->save();
+        }
+        return $this->render('/student/result.php', ['aid' => $assignmentid]);
     }
     public function actionRequest()
     {
@@ -52,6 +75,10 @@ class StudentController extends Controller
     public function actionAssgall()
     {
         return $this->render('/student/assgall.php');
+    }
+    public function actionProgress()
+    {
+        return $this->render('/student/progress.php');
     }
     public function actionNewrequest()
     {
@@ -78,5 +105,38 @@ class StudentController extends Controller
             'model' => $model,
         ]);
        // return $this->render('/moderator/createrequest.php');
+    }
+    public function actionResult()
+    {
+        return $this->render('/student/result.php');
+    }
+    public function actionCourseTeachers($course_code)
+    {
+        $course = Courses::findOne($course_code);
+
+        $teachers = CourseTeacher::find()
+            ->where(['Course_id' => $course_code])
+            ->with('teacher') 
+            ->all();
+        
+        $teacherDetails = [];
+        
+        foreach ($teachers as $teacher) 
+        {
+            $teacherName = User::findOne($teacher->Teacher_id)->username;
+            $details = Teacher::findOne($teacher->Teacher_id);
+            $teacherDetails[] = [
+                'id' => $details->memberID, 
+                'name' => $teacherName,
+                'qualification' => $details->qualification,
+                'experience' => $details->experience,
+                'speciality' => $details->speciality,
+            ];
+        }
+        
+        return $this->render('course-teachers', [
+            'course' => $course,
+            'teacherDetails' => $teacherDetails,
+        ]);
     }
 }

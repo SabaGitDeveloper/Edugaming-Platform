@@ -13,11 +13,6 @@ use yii\web\IdentityInterface;
  *
  * @property integer $id
  * @property string $username
- * @property string $is_student
- * @property string $is_teacher
- * @property string $is_system_admin
- * @property string $is_design_admin
- * @property string $is_moderator
  * @property string $user_type
  * @property string $password_hash
  * @property string $password_reset_token
@@ -60,10 +55,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-            [['user_type'], 'safe'],//added by sundas
-            ['user_type', 'in', 'range' => ['admin', 'student', 'teacher', 'moderator']],//added by sundas
+            [['user_type'], 'safe'],
+            ['user_type', 'in', 'range' => ['admin', 'student', 'teacher', 'moderator']],
         ];
     }
 

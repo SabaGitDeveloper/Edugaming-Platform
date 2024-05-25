@@ -19,6 +19,7 @@ use backend\models\Courses;
 use backend\models\CourseTeacher;
 use backend\models\Teacher;
 use common\models\User;
+use backend\models\TeacherApprovalRequests;
 
 
 
@@ -83,7 +84,7 @@ class GuestController extends Controller
     {
         if (!Yii::$app->user->isGuest) {
             if (Yii::$app->user->identity->user_type === 'teacher') {
-                Yii::$app->session->set('userRole', 'teacher');
+                Yii::$app->session->set('role', 'teacher');
                 return $this->redirect(['teacher/index']);
             } else {
                 // Handle other user types or unauthorized access
@@ -282,43 +283,51 @@ class GuestController extends Controller
 
     public function actionCourses()
     {
-        $courses = Courses::find()->all();
-
-            return $this->render('courses', [
-                'courses' => $courses,
-            ]);
+        $teacher_id = Yii::$app->user->identity->id;
+    
+        $excludedCourseIds = TeacherApprovalRequests::find()
+            ->select('course_id')
+            ->where(['teacher_id' => $teacher_id])
+            ->andWhere(['in', 'status', ['pending', 'approved']])
+            ->column();
+    
+        $courses = Courses::find()
+            ->where(['not in', 'course_code', $excludedCourseIds])
+            ->all();
+    
+        return $this->render('courses', [
+            'courses' => $courses,
+        ]);
     }
+    
 
     public function actionCourseTeachers($course_code)
     {
         $course = Courses::findOne($course_code);
 
-        $teachers = CourseTeacher::find()
-            ->where(['Course_id' => $course_code])
-            ->with('teacher') 
+        $teachers = TeacherApprovalRequests::find()
+            ->where(['course_id' => $course_code, 'status' => 'approved'])
+            ->with('teacher')
             ->all();
-        
+
         $teacherDetails = [];
-        
-        foreach ($teachers as $teacher) 
-        {
-            $teacherName = User::findOne($teacher->Teacher_id)->username;
-            $details = Teacher::findOne($teacher->Teacher_id);
+
+        foreach ($teachers as $teacher) {
+            $user = User::findOne($teacher->teacher_id);
+            $teacherName = $user->username;
             $teacherDetails[] = [
-                'id' => $details->memberID, 
+                'id' => $teacher->teacher_id,
                 'name' => $teacherName,
-                'qualification' => $details->qualification,
-                'experience' => $details->experience,
-                'speciality' => $details->speciality,
+                'qualification' => $teacher->qualifications,
+                'experience' => $teacher->experience,
+                'speciality' => $teacher->speciality,
             ];
         }
-        
+
         return $this->render('course-teachers', [
             'course' => $course,
             'teacherDetails' => $teacherDetails,
         ]);
     }
-
-
 
 }

@@ -3,20 +3,15 @@
 namespace backend\models;
 
 use Yii;
-use common\models\User;
 
 /**
  * This is the model class for table "teacher".
  *
  * @property int $memberID
- * @property string $qualification
- * @property string $speciality
- * @property string $experience
  *
  * @property CourseTeacher[] $courseTeachers
  * @property User $member
  * @property QuestionSet[] $questionSets
- * @property StudentJoinRequests[] $studentJoinRequests
  * @property TeacherApprovalRequests[] $teacherApprovalRequests
  */
 class Teacher extends \yii\db\ActiveRecord
@@ -35,9 +30,8 @@ class Teacher extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['memberID', 'qualification', 'speciality', 'experience'], 'required'],
+            [['memberID'], 'required'],
             [['memberID'], 'integer'],
-            [['qualification', 'speciality', 'experience'], 'string', 'max' => 45],
             [['memberID'], 'unique'],
             [['memberID'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['memberID' => 'id']],
         ];
@@ -50,9 +44,6 @@ class Teacher extends \yii\db\ActiveRecord
     {
         return [
             'memberID' => 'Member ID',
-            'qualification' => 'Qualification',
-            'speciality' => 'Speciality',
-            'experience' => 'Experience',
         ];
     }
 
@@ -84,16 +75,6 @@ class Teacher extends \yii\db\ActiveRecord
     public function getQuestionSets()
     {
         return $this->hasMany(QuestionSet::class, ['created_by' => 'memberID']);
-    }
-
-    /**
-     * Gets query for [[StudentJoinRequests]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStudentJoinRequests()
-    {
-        return $this->hasMany(StudentJoinRequests::class, ['teacher_id' => 'memberID']);
     }
 
     /**

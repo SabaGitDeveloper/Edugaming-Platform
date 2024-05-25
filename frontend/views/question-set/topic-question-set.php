@@ -19,7 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Question Sets', ['create', 'course_code' => $model->course_code, 'topicID' => $model->topicID], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Assign Games', ['game-assignments/index','course_code'=>$model->course_code,'topicID'=>$model->topicID], ['class' => 'btn btn-success']) ?>    </p>
     </p>
 
     <table class="table">
@@ -30,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <th>Topic ID</th>
                 <th>Course Code</th>
                 <th>Edit</th>
+                <th>Assign</th>
             </tr>
         </thead>
         <tbody>
@@ -51,7 +51,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]) ?>
                         
                     </td>
-    
+                    <td>
+                        <?= Html::a('Assign Games', ['game-assignments/create','course_code'=>$model->course_code,'topicID'=>$model->topicID,'question_setID' => $model->question_setID], ['class' => 'btn btn-success']) ?>    </p>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

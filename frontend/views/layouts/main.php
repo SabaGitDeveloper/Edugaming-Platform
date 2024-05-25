@@ -57,6 +57,8 @@ AppAsset::register($this);
                 $menuItems[] = ['label' => 'Dashboard', 'url' => ['/site/mdashboard']];
             else if ($role === 'sysadmin')
                 $menuItems[] = ['label' => 'Dashboard', 'url' => ['/site/adashboard']];
+            else if ($role === 'teacher')
+                $menuItems[] = ['label' => 'Dashboard', 'url' => ['/teacher/index']];
         }
 
         // Logout button

@@ -16,12 +16,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'game_mode')->dropDownList([ 'learning' => 'Learning', 'quiz' => 'Quiz', ], ['prompt' => 'Select Game Mode']) ?>
 
-    <?= $form->field($model, 'interface_type')->dropDownList([1 => 'Bubble Pop', 2 => 'Bubble Pop with Multiple Options',3 => 'Assembling',
+    <?= $form->field($model, 'interface_type')->dropDownList(['BubblePop' => 'Bubble Pop', 'BubblePop with Multiple Options'  => 'Bubble Pop with Multiple Options', 'Assembling' => 'Assembling',
 ], ['prompt' => 'Select Interface Type']) ?>
-
-
-    <?= $form->field($model, 'question_setID')->dropDownList($questionsets, ['prompt' => 'Select Question Set']) ?>
-
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

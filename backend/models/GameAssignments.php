@@ -13,7 +13,7 @@ use Yii;
  * @property string $date_assigned
  * @property string $due_date
  * @property string $game_mode
- * @property int $interface_type
+ * @property string $interface_type
  * @property int $question_setID
  * @property int|null $topicId  //new added
  *
@@ -40,12 +40,12 @@ class GameAssignments extends \yii\db\ActiveRecord
         return [
            // [['course_code', 'assigned_by', 'date_assigned', 'due_date', 'game_mode', 'interface_type', 'question_setID'], 'required'],
            [['course_code', 'assigned_by', 'interface_type', 'question_setID'], 'required'],    //added by saba
-            [['assigned_by', 'interface_type', 'question_setID','topicId'], 'integer'],
+            [['assigned_by', 'question_setID','topicId'], 'integer'],
             [['course_code'], 'string', 'max' => 10],
+            [['interface_type'], 'string'], 
            // [['date_assigned', 'due_date'], 'string', 'max' => 30],
             [['date_assigned','due_date'],'safe'],  //added by saba
             [['game_mode'], 'string', 'max' => 45],
-            [['course_code'], 'unique'],
             [['topicId'], 'exist', 'skipOnError' => true, 'targetClass' => Topic::class, 'targetAttribute' => ['topicId' => 'topicID']],    //added by saba
             [['course_code'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['course_code' => 'course_code']],
             [['question_setID'], 'exist', 'skipOnError' => true, 'targetClass' => QuestionSet::class, 'targetAttribute' => ['question_setID' => 'question_setID']],
@@ -95,7 +95,7 @@ class GameAssignments extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getStudentgameassignments()
+    public function getStudentgameassignment()
     {
         return $this->hasMany(Studentgameassignment::class, ['AssignmentId' => 'assignmentID']);
     }

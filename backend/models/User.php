@@ -11,11 +11,6 @@ use Yii;
  * @property string $email
  * @property string $username
  * @property string|null $password
- * @property string|null $is_student
- * @property string|null $is_teacher
- * @property string|null $is_moderator
- * @property string|null $is_system_admin
- * @property string|null $is_design_admin
  * @property string $auth_key
  * @property string $password_hash
  * @property string|null $password_reset_token
@@ -49,7 +44,6 @@ class User extends \yii\db\ActiveRecord
             [['status'], 'integer'],
             [['created_at'], 'safe'],
             [['email', 'username', 'password', 'updated_at'], 'string', 'max' => 45],
-            [['is_student', 'is_teacher', 'is_moderator', 'is_system_admin', 'is_design_admin'], 'string', 'max' => 1],
             [['auth_key'], 'string', 'max' => 32],
             [['password_hash', 'password_reset_token', 'verification_token'], 'string', 'max' => 255],
             [['email'], 'unique'],
@@ -69,11 +63,6 @@ class User extends \yii\db\ActiveRecord
             'email' => 'Email',
             'username' => 'Username',
             'password' => 'Password',
-            'is_student' => 'Is Student',
-            'is_teacher' => 'Is Teacher',
-            'is_moderator' => 'Is Moderator',
-            'is_system_admin' => 'Is System Admin',
-            'is_design_admin' => 'Is Design Admin',
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',

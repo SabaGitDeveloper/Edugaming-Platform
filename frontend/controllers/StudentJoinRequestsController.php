@@ -15,7 +15,7 @@ class StudentJoinRequestsController extends \yii\web\Controller
         $teacherId = Yii::$app->user->identity->id;
         
         $dataProvider = new ActiveDataProvider([
-            'query' => StudentJoinRequests::find()->where(['teacher_id' => $teacherId]),
+            'query' => StudentJoinRequests::find()->where(['teacher_id' => $teacherId, 'status'=>'pending']),
         ]);
 
         return $this->render('index', [

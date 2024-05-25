@@ -1,6 +1,4 @@
-<?php
-
-use yii\helpers\Html;
+<?php use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
@@ -8,7 +6,28 @@ use yii\grid\GridView;
 
 $this->title = 'All Courses';
 $this->params['breadcrumbs'][] = $this->title;
+
+$buttons = [];
+if (!Yii::$app->user->isGuest && Yii::$app->user->identity->user_type === 'teacher'){
+    $buttons['class'] = 'yii\grid\ActionColumn';
+    $buttons['template'] = '{view}';
+    $buttons['buttons'] = [
+        'view' => function ($url, $model) {
+            return Html::a('Join Request', ['teacher-approval-requests/create', 'course_code' => $model->course_code], ['class' => 'btn btn-success']);
+        }
+    ];
+} else {
+    $buttons['class'] = 'yii\grid\ActionColumn';
+    $buttons['template'] = '{view}';
+    $buttons['buttons'] = [
+        'view' => function ($url, $model) {
+            return Html::a('View', ['guest/course-teachers', 'course_code' => $model->course_code], ['class' => 'btn btn-primary']);
+        }
+    ];
+}
+
 ?>
+
 <div class="site-courses">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -21,15 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'course_code',
             'course_name',
             'course_description:ntext',
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}',
-                'buttons' => [
-                    'view' => function ($url, $model, $key) {
-                        return Html::a('View', ['guest/course-teachers', 'course_code' => $model->course_code], ['class' => 'btn btn-primary']);
-                    },
-                ],
-            ],
+            $buttons,
         ],
     ]) ?>
 

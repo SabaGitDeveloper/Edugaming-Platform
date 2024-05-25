@@ -6,6 +6,9 @@ use Yii;
 use backend\models\GameAssignments;
 use backend\models\GameAssignmentsSearch;
 use backend\models\QuestionSet;
+use backend\models\Courses;
+use backend\models\CourseStudent;
+use backend\models\CourseTeacher;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -47,6 +50,9 @@ class GameAssignmentsController extends Controller
         $model->assigned_by = Yii::$app->user->identity->id;   
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $dataProvider = $searchModel->search(array_merge($this->request->queryParams,['GameAssignmentsSearch' => ['course_code' => $course_code]]));
+
+
         return $this->render('index', [
             'model'=>$model,
             'searchModel' => $searchModel,
@@ -72,13 +78,14 @@ class GameAssignmentsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate($course_code,$topicID)
+    public function actionCreate($course_code,$topicID,$question_setID)
     {
         $model = new GameAssignments();
         $model->course_code=$course_code;
         $model->assigned_by = Yii::$app->user->identity->id;
-        $model->date_assigned= date('Y-m-d');
+        $model->date_assigned= date('Y-m-d H:i:s');
         $model->topicId= $topicID;
+        $model->question_setID=$question_setID;
 
         $questionsets = QuestionSet::find()
         ->where(['topicID' => $topicID])
@@ -151,4 +158,26 @@ class GameAssignmentsController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionCourses()
+    {
+        // Get the logged-in teacher's ID
+        $teacherId = Yii::$app->user->identity->id;
+        
+        // Find courses assigned to this teacher
+        $query = CourseTeacher::find()
+            ->where(['teacher_id' => $teacherId])
+            ->with('course');
+        
+        // Create data provider
+        $dataProvider = new \yii\data\ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        // Pass the data provider to the view
+        return $this->render('courses', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
 }

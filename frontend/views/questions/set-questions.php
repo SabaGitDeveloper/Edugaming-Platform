@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <tr>
                     <td><?= $index + 1 ?></td>
                     <td><?= Html::encode($model->QuestionNo) ?></td>
-                    <td><?= Html::a(Html::encode($model->QuestionStatement), ['options/index', 'QuestionNo' => $model->QuestionNo]) ?></td>
+                    <td><?= Html::a(Html::encode($model->QuestionStatement), ['options/index', 'questionNo' => $model->QuestionNo]) ?></td>
                     <td><?= Html::encode($model->Hints) ?></td>
                     <td><?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view', 'QuestionNo' => $model->QuestionNo], ['title' => 'View']) ?></td> 
                     <td><?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'QuestionNo' => $model->QuestionNo], ['title' => 'Edit']) ?></td>
