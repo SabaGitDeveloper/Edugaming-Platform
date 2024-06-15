@@ -16,6 +16,8 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\models\User; //added by saba
+use yii\web\Response;
+use backend\models\Questions;
 
 /**
  * Site controller
@@ -196,6 +198,18 @@ class SiteController extends Controller
     {
         return $this->render('adashboard');
     }
+    public function actionCubegame()
+    {
+        return $this->render('cubegame');
+    }
+    public function actionPuzzlegame()
+    {
+        return $this->render('puzzlegame');
+    }
+    public function actionBubblegame()
+    {
+        return $this->render('bubblegame');
+    }
 
     /**
      * Signs user up.
@@ -306,5 +320,19 @@ class SiteController extends Controller
         return $this->render('resendVerificationEmail', [
             'model' => $model
         ]);
+    }
+    //---------------------------------------attempt for ajax----------------
+
+    public function actionGetquestions()
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        try {
+            $questions = Questions::find()->where(['QuestionSet' => 1])->all();
+            return $questions;
+        } catch (\Exception $e) {
+            // Log or handle the exception appropriately
+            Yii::error($e->getMessage());
+            return ['error' => 'Failed to fetch questions.'];
+        }
     }
 }
