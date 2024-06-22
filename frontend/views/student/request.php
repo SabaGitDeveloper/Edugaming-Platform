@@ -1,13 +1,8 @@
 <?php
 
 /** @var yii\web\View  $this  */
-use backend\models\StudentJoinRequests;
-use common\models\User;
 /* @var $courses array */
-
 use yii\helpers\Html;
-$userId = Yii::$app->session->get('user_id');
-$StudentRequests = StudentJoinRequests::find()->where(['student_id' => $userId])->all();
 $this->title = 'Your Requests';
 ?>
 <!DOCTYPE html>
@@ -142,8 +137,8 @@ $this->title = 'Your Requests';
                 <i class="fa-solid fa-book  me-2"></i>
                 <span>
                     <h6 class="mt-1 mb-0">
-                          EduGaming Platform
-                      </h6>
+                        EduGames Learning Platform
+                    </h6>
                 </span>
             </div>
         </div>
@@ -154,7 +149,7 @@ $this->title = 'Your Requests';
                    data-bs-target="#bdSidebar">
                     <i class="fa-solid fa-bars"></i>
                 </a>
-                <span class="ms-3">EduGaming Portal</span>
+                <span class="ms-3">EduGames Learning Portal</span>
             </div>
             <div class="p-4">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -168,20 +163,13 @@ $this->title = 'Your Requests';
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($StudentRequests as $sr):
-            $status=$sr->status;
-            if($status=="pending"):
-                $teacherId=$sr->teacher_id;
-                $teacher = User::find()->where(['id' => $teacherId])->one();
-                $teachername=$teacher->username;
-                $courseid=$sr->course_id;
-            ?>
-                <tr>
-                    <th scope="row"><span><?php echo $courseid;?></span></th>
-                    <td><span><?php echo $teachername;?></span></td>
-                    <td><span><?php echo $status;?></span></td>
-                </tr>
-            <?php endif; ?>
+   
+        <?php foreach ($teacherData as $data): ?>
+                            <tr>
+                                <th scope="row"><span><?php echo $data['course_id']; ?></span></th>
+                                <td><span><?php echo $data['teacher']->username; ?></span></td>
+                                <td><span>pending</span></td>
+                            </tr>
         <?php endforeach; ?>
     </tbody>
     </table>

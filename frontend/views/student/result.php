@@ -1,41 +1,7 @@
 <?php 
 use yii\helpers\Html;
-use backend\models\Questions;
-use backend\models\Studentgameassignment;
-use backend\models\GameAssignments;
 /** @var yii\web\View  $this  */
 $this->title = 'Assignment Details';
-$request = Yii::$app->request;
-$questionset= $request->get('qid');
-$interface=$request->get('inid');
-if($questionset===null && $interface===null){
-    $gameassignment1 = GameAssignments::find()->where(['assignmentID' => $aid])->one();   
-    $questionset=$gameassignment1->question_setID;
-    $interface=$gameassignment1->interface_type;
-    $mode=$gameassignment1->game_mode;
-}
-$assignmentid=$request->get('assid');
-$gameassignment = GameAssignments::find()->where(['assignmentID' => $assignmentid])->one();
-if($gameassignment==null){
-    $gameassignment1 = GameAssignments::find()->where(['assignmentID' => $aid])->one();
-    $courseid=$gameassignment1->course_code;
-    $topicid=$gameassignment1->topicId;
-    $mode=$gameassignment1->game_mode;
-    $AssignmentScore= Studentgameassignment::find()->where(['AssignmentId' => $aid])->all();
-}
-else{
-$courseid=$gameassignment->course_code;
-$topicid=$gameassignment->topicId;
-$AssignmentScore= Studentgameassignment::find()->where(['AssignmentId' => $assignmentid])->all();
-$mode=$gameassignment->game_mode;
-}
-$questions = Questions::find()->where(['QuestionSet' => $questionset])->all();
-$totalQuestions = Questions::find()->where(['QuestionSet' => $questionset])->count();
-foreach($AssignmentScore as $assignmentscore){
-    $speed=$assignmentscore->Speed;
-    $accuracy=$assignmentscore->Accuracy;
-    $tries=$assignmentscore->tries;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -169,8 +135,8 @@ foreach($AssignmentScore as $assignmentscore){
                 <i class="fa-solid fa-book  me-2"></i>
                 <span>
                     <h6 class="mt-1 mb-0">
-                          EduGaming Platform
-                      </h6>
+                        EduGames Learning Platform
+                    </h6>
                 </span>
             </div>
         </div>
@@ -181,7 +147,7 @@ foreach($AssignmentScore as $assignmentscore){
                    data-bs-target="#bdSidebar">
                     <i class="fa-solid fa-bars"></i>
                 </a>
-                <span class="ms-3">EduGaming Portal</span>
+                <span class="ms-3">EduGames Learning Portal</span>
             </div>
             <div class="p-4">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -207,9 +173,9 @@ foreach($AssignmentScore as $assignmentscore){
                     <?php }
                     else{
                     ?><span>----</span></td><?php } if (($mode=="quiz" && $tries==0) || $mode=="learning") { if ($assignmentid!==null) {?>
-                    <td><span><?= Html::a("Play", ['quiz', 'qid' => $questionset,'inid' => $interface,'assignmentid'=>$assignmentid], ['style' => 'text-decoration: none;']) ?></span></td>
+                    <td><span><?= Html::a("Play", ['formbasedgame', 'qid' => $questionset,'inid' => $interface,'assignmentid'=>$assignmentid], ['style' => 'text-decoration: none;']) ?></span></td>
                     <?php } else {
-                        ?><td><span><?= Html::a("Play", ['quiz', 'qid' => $questionset,'inid' => $interface,'assignmentid'=>$aid], ['style' => 'text-decoration: none;']) ?></span></td><?php } }?>
+                        ?><td><span><?= Html::a("Play", ['formbasedgame', 'qid' => $questionset,'inid' => $interface,'assignmentid'=>$aid], ['style' => 'text-decoration: none;']) ?></span></td><?php } }?>
                 </tr>
     </tbody>
     </table>

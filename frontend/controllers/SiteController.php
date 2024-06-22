@@ -18,6 +18,9 @@ use frontend\models\ContactForm;
 use common\models\User; //added by saba
 use yii\web\Response;
 use backend\models\Questions;
+use backend\models\Options;
+use backend\models\GameAssignments;
+use backend\models\Studentgameassignment;
 
 /**
  * Site controller
@@ -325,14 +328,89 @@ class SiteController extends Controller
 
     public function actionGetquestions()
     {
-        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $request = \Yii::$app->request;
+        $qset= $request->get('qid');
+        $inid=$request->get('inid');
+        $assignmentId=$request->get('assid');
+        \Yii::$app->response->format =  \yii\web\Response::FORMAT_JSON;
         try {
-            $questions = Questions::find()->where(['QuestionSet' => 1])->all();
+            $qset=Yii::$app->request->get('qid');
+            if ($qset === null) {
+                throw new \yii\web\BadRequestHttpException('Question set ID is required');
+            }
+            if (isset($_GET['assid'])) {
+                $assignmentId = $_GET['assid'];
+            } else {
+                // Handle the case where 'qid' is not set
+                throw new \yii\web\BadRequestHttpException('assignment ID is required');
+            }
+            $assignmentId=1;
+            $qset=GameAssignments::find()->where(['assignmentID'=>$assignmentId])->one();
+            $questions = Questions::find()->where(['QuestionSet' => $qset])->all();
+            if (empty($questions)) {
+                return ['error' => 'No questions found for the specified question set.'];
+            }
             return $questions;
         } catch (\Exception $e) {
             // Log or handle the exception appropriately
             Yii::error($e->getMessage());
             return ['error' => 'Failed to fetch questions.'];
         }
+    }
+    public function actionGetoptions($index)
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        try {
+            $options = Options::find()->where(['questionNo' => $index])->all();
+            return $options;
+        } catch (\Exception $e) {
+            // Log or handle the exception appropriately
+            Yii::error($e->getMessage());
+            return ['error' => 'Failed to fetch options.'];
+        }
+    }
+    public function actionSaveScore()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        try {
+        $assId=2;
+        $studentId = \Yii::$app->session->get('user_id'); 
+        $courseId = GameAssignments::find()->select('course_code')->where(['assignmentID'=>$assId])->one();
+        //echo $courseId;
+        if (!$courseId) {
+            throw new \Exception('GameAssignment not found');
+        }
+        $score = Yii::$app->request->post('score');
+        $accuracy = Yii::$app->request->post('accuracy');
+        $speed = Yii::$app->request->post('speed');
+
+        // Find existing record or create a new one
+        $assignment = Studentgameassignment::find()->where([
+            'StudentID' => $studentId,
+            'CourseID' => $courseId,
+        ])->one();
+
+        if (!$assignment) {
+            $assignment = new Studentgameassignment();
+            $assignment->StudentID = $studentId;
+            $assignment->CourseID = $courseId;
+            $assignment->tries = 0;
+        }
+
+        $assignment->AssignmentId = $assId;
+        $assignment->Accuracy = $accuracy;
+        $assignment->Speed = $speed;
+        $assignment->tries += 1;
+
+        if ($assignment->save()) {
+            return ['status' => 'success'];
+        } else {
+            return ['status' => 'error', 'errors' => $assignment->errors];
+        }
+        } catch (\Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+
     }
 }

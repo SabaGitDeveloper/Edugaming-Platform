@@ -1,12 +1,7 @@
 <?php
 
 /** @var yii\web\View  $this  */
-use backend\models\Topic;
 use yii\helpers\Html;
-// Get the request object
-$request = Yii::$app->request;
-$courseid= $request->get('id');
-$topics = Topic::find()->where(['course_code' => $courseid])->all();
 $this->title = 'Topics';
 ?>
 <!DOCTYPE html>
@@ -141,8 +136,8 @@ $this->title = 'Topics';
                 <i class="fa-solid fa-book  me-2"></i>
                 <span>
                     <h6 class="mt-1 mb-0">
-                          EduGaming Platform
-                      </h6>
+                        EduGames Learning Platform
+                    </h6>
                 </span>
             </div>
         </div>
@@ -153,7 +148,7 @@ $this->title = 'Topics';
                    data-bs-target="#bdSidebar">
                     <i class="fa-solid fa-bars"></i>
                 </a>
-                <span class="ms-3">EduGaming Portal</span>
+                <span class="ms-3">EduGames Learning Portal</span>
             </div>
             <div class="p-4">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -168,15 +163,11 @@ $this->title = 'Topics';
     </thead>
     <tbody>
     <?php foreach ($topics as $topic):
-            $topicid=$topic->topicID;
-            $topicname=$topic->topic_title;
-            $topicdescription=$topic->topic_description;
-            $target=$topic->learning_target;
             ?>
                 <tr>
-                    <th scope="row"><span style="color: blue; "><?= Html::a($topicname, ['assignment', 'id' => $topicid, 'courseid'=>$courseid], ['class' => 'btn btn-default']) ?></span></th>
-                    <td><span style="color: blue; "><?= Html::a($topicdescription, ['assignment', 'id' => $topicid,'courseid'=>$courseid], ['class' => 'btn btn-default']) ?></span></td>
-                    <td><span style="color: blue; "><?= Html::a($target, ['assignment', 'id' => $topicid,'courseid'=>$courseid], ['class' => 'btn btn-default']) ?></span></td>
+                    <th scope="row"><span style="color: blue; "><?= Html::a($topic->topic_title, ['assignment', 'id' => $topic->topicID, 'courseid'=>$courseid], ['class' => 'btn btn-default']) ?></span></th>
+                    <td><span style="color: blue; "><?= Html::a($topic->topic_description, ['assignment', 'id' => $topic->topicID,'courseid'=>$courseid], ['class' => 'btn btn-default']) ?></span></td>
+                    <td><span style="color: blue; "><?= Html::a($topic->learning_target, ['assignment', 'id' => $topic->topicID,'courseid'=>$courseid], ['class' => 'btn btn-default']) ?></span></td>
                 </tr>
         <?php endforeach; ?>
     </tbody>

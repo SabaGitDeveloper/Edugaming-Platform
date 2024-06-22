@@ -12,7 +12,9 @@ use Yii;
  * @property string|null $Hints
  * @property int|null $QuestionSet
  *
+ 
  * @property Options[] $options
+ * @property OptionsPuzzle[] $optionsPuzzles
  * @property QuestionSet $questionSet
  * @property string|null $comments 
  */
@@ -75,4 +77,15 @@ class Questions extends \yii\db\ActiveRecord
     {
         return $this->hasOne(QuestionSet::class, ['question_setID' => 'QuestionSet']);
     }
+    
+    /**
+     * Gets query for [[OptionsPuzzles]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOptionsPuzzles()
+    {
+        return $this->hasMany(OptionsPuzzle::class, ['questionNo' => 'QuestionNo']);
+    }
+      
 }

@@ -1,16 +1,8 @@
 <?php
 
 /** @var yii\web\View  $this  */
-use backend\models\GameAssignments;
-use backend\models\Studentgameassignment;
 use yii\helpers\Html;
-// Get the request object
-$request = Yii::$app->request;
-$topicid= $request->get('id');
-$courseid= $request->get('courseid');
-$assignments = GameAssignments::find()->where(['topicID' => $topicid])->all();
 $this->title = 'Assignments';
-$score=0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -144,7 +136,7 @@ $score=0;
                 <i class="fa-solid fa-book  me-2"></i>
                 <span>
                     <h6 class="mt-1 mb-0">
-                          EduGaming Platform
+                          EduGames Learning Platform
                       </h6>
                 </span>
             </div>
@@ -156,7 +148,7 @@ $score=0;
                    data-bs-target="#bdSidebar">
                     <i class="fa-solid fa-bars"></i>
                 </a>
-                <span class="ms-3">EduGaming Portal</span>
+                <span class="ms-3">EduGames Portal</span>
             </div>
             <div class="p-4">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -175,26 +167,20 @@ $score=0;
     <?php 
     $i=0;
     foreach ($assignments as $assignment):
-            $assignmentid=$assignment->assignmentID;
-            $AssignmentScore= Studentgameassignment::find()->where(['AssignmentId' => $assignmentid])->one();
-            $tries=$AssignmentScore->tries;
-            $questionset=$assignment->question_setID;
-            $interface=$assignment->interface_type;
-            $duedate=$assignment->due_date;
-            $expiryDate=strtotime($duedate);
+            $expiryDate=strtotime($assignment->due_date);
             $currentDate = time();
-            $mode=$assignment->game_mode;
             $i++;
             ?>
                 <tr>
                     <th scope="row"><span style="margin-left: 12px;"><?php echo $i; ?></span></th>
-                    <td><span style="margin-left: 12px;"><?php echo $mode;?></span></td>
-                    <td><span style="margin-left: 12px;"><?php echo $duedate;?></span></td>
+                    <td><span style="margin-left: 12px;"><?php echo $assignment->game_mode;?></span></td>
+                    <td><span style="margin-left: 12px;"><?php echo $assignment->due_date;?></span></td>
                     <td><?php
-                    if ($currentDate < $expiryDate && $tries==0) {
+                    $AssignmentScore = $assignmentScores[$assignment->assignmentID];
+                    if ($currentDate < $expiryDate && $AssignmentScore->tries==0) {
                         $status = 'Pending';?>
                         <span style="margin-left: 12px; color: green;"><?php echo $status;?></span>
-                    <?php } elseif ($currentDate > $expiryDate && $tries==0) {
+                    <?php } elseif ($currentDate > $expiryDate && $AssignmentScore->tries==0) {
                         $status = 'Expired';?>
                         <span style="margin-left: 12px; color: red;"><?php echo $status;?></span>
                     <?php } else {
@@ -202,8 +188,8 @@ $score=0;
                         <span style="margin-left: 12px; color: blue;"><?php echo $status;?></span>
                     <?php }
                     ?></td>
-                    <td><span style="margin-left: 4px; color:blue;"><?= Html::a('Form Based', ['result', 'qid' => $questionset,'inid' => $interface, 'assid'=>$assignment->assignmentID], ['class' => 'btn btn-default']) ?></span></td>
-                    <td><span style="margin-left: 4px; color:blue;"><?= Html::a('Game Based', ['result', 'qid' => $questionset,'inid' => $interface, 'score'=>$score], ['class' => 'btn btn-default']) ?></span></td>
+                    <td><span style="margin-left: 4px; color:blue;"><?= Html::a('Form Based', ['result', 'qid' => $assignment->question_setID,'inid' => $assignment->interface_type, 'assid'=>$assignment->assignmentID], ['class' => 'btn btn-default']) ?></span></td>
+                    <td><span style="margin-left: 4px; color:blue;"><?= Html::a('Game Based', ['site/cubegame', 'qid' => $assignment->question_setID,'inid' => $assignment->interface_type,'assid'=>$assignment->assignmentID], ['class' => 'btn btn-default']) ?></span></td>
                 </tr>
         <?php endforeach; ?>
     </tbody>

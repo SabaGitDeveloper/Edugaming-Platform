@@ -1,13 +1,7 @@
 <?php
 
 /** @var yii\web\View  $this  */
-use backend\models\GameAssignments;
-use backend\models\CourseStudent;
-use backend\models\Studentgameassignment;
 use yii\helpers\Html;
-// Get the request object
-$userId = Yii::$app->session->get('user_id');
-$StudentCourses = CourseStudent::find()->where(['Student_ID' => $userId])->all();
 $this->title = 'Progress';
 $score=0;
 ?>
@@ -143,8 +137,8 @@ $score=0;
                 <i class="fa-solid fa-book  me-2"></i>
                 <span>
                     <h6 class="mt-1 mb-0">
-                          EduGaming Platform
-                      </h6>
+                        EduGames Learning Platform
+                    </h6>
                 </span>
             </div>
         </div>
@@ -155,7 +149,7 @@ $score=0;
                    data-bs-target="#bdSidebar">
                     <i class="fa-solid fa-bars"></i>
                 </a>
-                <span class="ms-3">EduGaming Portal</span>
+                <span class="ms-3">EduGames Learning Portal</span>
             </div>
             <div class="p-4">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -172,48 +166,30 @@ $score=0;
     </tr>
     </thead>
     <tbody>
-    <?php 
-    foreach ($StudentCourses as $stc){
-        $coursecode=$stc->CourseID;
-        $assignments = GameAssignments::find()->where(['course_code' => $coursecode])->all();
-        $total = GameAssignments::find()->where(['course_code' => $coursecode])->count();
-        $pending=0;
-        $completed=0;
-        $expired=0;
-    foreach ($assignments as $assignment):
-            $assignmentid=$assignment->assignmentID;
-            $AssignmentScore= Studentgameassignment::find()->where(['AssignmentId' => $assignmentid])->one();
-            $tries=$AssignmentScore->tries;
-            $coursecode=$assignment->course_code;
-            $duedate=$assignment->due_date;
-            $expiryDate=strtotime($duedate);
-            $currentDate = time();
-            if ($currentDate < $expiryDate && $tries==0){
-                $pending++;
-            }
-            else if ($currentDate > $expiryDate && $tries==0){
-                $expired++;
-            }
-            else{
-               $completed++; 
-            }
-            ?>
+    <?php foreach ($courseProgress as $coursecode => $assignment): ?>
                 <tr>
-                    <th scope="row"><span style="margin-left: 12px;"><?php echo $coursecode; ?></span></th>
-                    <td><span style="margin-left: 12px; color: blue;"><?php echo $total;?></span></td>
-                    <td><span style="margin-left: 12px; color: red;"><?php echo $pending;?></span></td>
-                    <td><span style="margin-left: 12px; color: green;"><?php echo $completed;?></span></td>
-                    <td><span style="margin-left: 12px; color: red;"><?php echo $expired;?></span></td>
+                    <th scope="row"><span style="margin-left: 12px;"><?php echo $assignment['coursecode']; ?></span></th>
+                    <td><span style="margin-left: 12px; color: blue;"><?php echo $assignment['total']; ?></span></td>
+                    <td><span style="margin-left: 12px; color: red;"><?php echo $assignment['pending']; ?></span></td>
+                    <td><span style="margin-left: 12px; color: green;"><?php echo $assignment['completed']; ?></span></td>
+                    <td><span style="margin-left: 12px; color: red;"><?php echo $assignment['expired']; ?></span></td>
                     <td>
                         <div class="progress">
-                        <?php $progress= $completed/$total*100;?>
-                          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $progress; ?>%;">
-                            <span> <?php echo $progress."%";?> </span>
-                          </div>
+                            <?php 
+                            $totalAssignments = $assignment['total'];
+                            if ($totalAssignments > 0) {
+                                $progress = ($assignment['completed'] / $totalAssignments) * 100;
+                            } else {
+                                $progress = 0;
+                            }
+                            ?>
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: <?= $progress; ?>%;">
+                                <span> <?= round($progress) . "%"; ?> </span>
+                            </div>
                         </div> 
                     </td>
                 </tr>
-        <?php endforeach; }?>
+                <?php endforeach; ?>
     </tbody>
     </table>
 </div>

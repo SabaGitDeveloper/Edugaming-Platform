@@ -1,11 +1,6 @@
 <?php 
 use yii\helpers\Html;
 /** @var yii\web\View  $this  */
-use backend\models\CourseStudent;
-use backend\models\Courses;
-/* @var $courses array */
-$userId = Yii::$app->session->get('user_id');
-$StudentCourses = CourseStudent::find()->where(['Student_ID' => $userId])->all();
 $this->title = 'Your Courses';
 ?>
 <!DOCTYPE html>
@@ -101,7 +96,7 @@ $this->title = 'Your Courses';
                 </li>
                 <li class="nav-item mb-1" style="display: flex; align-items: center;">
                         <i class="fa-regular fa-newspaper" style="margin-right: 7px; margin-left: 8px;"></i>
-                        <?= Html::a('Requests', ['/student/requests'], ['style' => 'text-decoration: none;']) ?>
+                        <?= Html::a('Requests', ['/student/request'], ['style' => 'text-decoration: none;']) ?>
                 </li>
                 <li class="nav-item mb-1" style="display: flex; align-items: center;">
                        <i class="fa-solid fa-archway" style="margin-right: 7px; margin-left: 8px;"></i>
@@ -140,8 +135,8 @@ $this->title = 'Your Courses';
                 <i class="fa-solid fa-book  me-2"></i>
                 <span>
                     <h6 class="mt-1 mb-0">
-                          EduGaming Platform
-                      </h6>
+                          EduGames Learning Platform
+                    </h6>
                 </span>
             </div>
         </div>
@@ -152,7 +147,7 @@ $this->title = 'Your Courses';
                    data-bs-target="#bdSidebar">
                     <i class="fa-solid fa-bars"></i>
                 </a>
-                <span class="ms-3">EduGaming Portal</span>
+                <span class="ms-3">EduGames Learning Portal</span>
             </div>
             <div class="p-4">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -167,18 +162,13 @@ $this->title = 'Your Courses';
     </tr>
     </thead>
     <tbody>
-        <?php foreach ($StudentCourses as $stc):
-            $coursecode=$stc->CourseID;
-            $course = Courses::find()->where(['course_code' => $coursecode])->one();
-            $courseid=$course->course_code;
-            $coursename=$course->course_name;
-            $coursedescription=$course->course_description;
+        <?php foreach ($courses as $course):
             ?>
                 <tr>
-                    <th scope="row"><span style="color: blue; "><?= Html::a($courseid, ['topic', 'id' => $courseid], ['class' => 'btn btn-default']) ?></span></th>
-                    <td><span style="color: blue; "><?= Html::a($coursename, ['topic', 'id' => $courseid], ['class' => 'btn btn-default']) ?></span></td>
-                    <td><span style="color: blue; "><?= Html::a($coursedescription, ['topic', 'id' => $courseid], ['class' => 'btn btn-default']) ?></span></td>
-                    <td><span style="color: blue; "><?= Html::a('Unenroll', ['Unenroll', 'id' => $courseid], ['class' => 'btn btn-default']) ?></span></td>
+                    <th scope="row"><span style="color: blue; "><?= Html::a($course->course_code, ['topic', 'id' => $course->course_code], ['class' => 'btn btn-default']) ?></span></th>
+                    <td><span style="color: blue; "><?= Html::a($course->course_name, ['topic', 'id' => $course->course_code], ['class' => 'btn btn-default']) ?></span></td>
+                    <td><span style="color: blue; "><?= Html::a($course->course_description, ['topic', 'id' => $course->course_code], ['class' => 'btn btn-default']) ?></span></td>
+                    <td><span style="color: blue; "><?= Html::a('Unenroll', ['Unenroll', 'id' => $course->course_code], ['class' => 'btn btn-default']) ?></span></td>
                 </tr>
         <?php endforeach; ?>
     </tbody>

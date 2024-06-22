@@ -13,6 +13,7 @@
                 "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
             }
         }
+
     </script>
     <script type="module">
         import * as THREE from 'three';
@@ -53,7 +54,7 @@
                 this.back = this.position.z - this.depth / 2;
                 this.front = this.position.z + this.depth / 2;
 
-                this.velocity = velocity;
+                this.velocity = velocity instanceof THREE.Vector3 ? velocity : new THREE.Vector3(velocity.x, velocity.y, velocity.z);
                 this.gravity = -0.002;
                 this.zAcceleration = zAcceleration;
             }
@@ -89,11 +90,13 @@
             const xCollision = box1.right >= box2.left && box1.left <= box2.right;
             const zCollision = box1.front >= box2.back && box1.back <= box2.front;
             const yCollision = box1.top >= box2.bottom && box1.bottom + box1.velocity.y <= box2.top;
-
+            //console.log('Box1:', { right: box1.right, left: box1.left, front: box1.front, back: box1.back, top: box1.top, bottom: box1.bottom });
+            //console.log('Box2:', { right: box2.right,left: box2.left, front: box2.front, back: box2.back, top: box2.top, bottom: box2.bottom });
+            console.log('Collisions:', { xCollision, yCollision, zCollision });
             return zCollision && yCollision && xCollision;
         }
 
-        const ground = new Box({ width: 10, height: 0.5, depth: 50, color: '#0369a1', position: { x: 0, y: -2, z: 0 } });
+        const ground = new Box({ width: 15, height: 0.5, depth: 50, color: '#0369a1', position: { x: 0, y: -2, z: 0 } });
         ground.receiveShadow = true;
         scene.add(ground);
 
@@ -148,7 +151,8 @@
                     break;
             }
         });
-<?php $questionsUrl = \yii\helpers\Url::to(['site/getquestions']);?>
+
+<?php $questionsUrl = \yii\helpers\Url::to(['site/getquestions']); ?>
         function fetchQuestions() {
             return $.ajax({
                 url: '<?= $questionsUrl ?>',
@@ -156,61 +160,201 @@
                 dataType: 'json'
             });
         }
-        const fontLoader = new FontLoader();
-        fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', 
-        function (font) {
-            console.log('Loaded font:', font);
-            fetchQuestions().done(function (questions) {
-                const question = questions[0];
 
-                const questionText = createTextMesh(question.QuestionStatment, font);
-                console.log(questions);
-                scene.add(questionText);
-                questionText.position.set(cube.position.x, cube.position.y + 1.5, cube.position.z);
-
-                const option1Text = createTextMesh(question.option1, font);
-                const option2Text = createTextMesh(question.option2, font);
-
-                const optionCube1 = createOptionCube(option1Text, { x: cube.position.x - 2, y: cube.position.y, z: cube.position.z });
-                const optionCube2 = createOptionCube(option2Text, { x: cube.position.x + 2, y: cube.position.y, z: cube.position.z });
-
-                scene.add(optionCube1);
-                scene.add(optionCube2);
+<?php $optionsUrl = \yii\helpers\Url::to(['site/getoptions']); ?>
+        function fetchOptions(index) {
+            return $.ajax({
+                url: '<?= $optionsUrl ?>',
+                method: 'GET',
+                data: { index: index },
+                dataType: 'json'
             });
+        }
+
+        const fontLoader = new FontLoader();
+        let optionCubes = [];
+        let questionText;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questions = [];
+        let gamePaused = false;
+        let startTime = Date.now();
+        let total=0;
+
+        function loadNewQuestionAndOptions(font,animationId) {
+            fetchQuestions().done(function (questions) {
+                total=questions.length;
+                console.log("total quesitons:",total);
+                if (questions.length > 0 && currentQuestionIndex < questions.length) {
+                    const question = questions[currentQuestionIndex];
+                    console.log(question.QuestionStatement);
+
+                    if (questionText) {
+                        cube.remove(questionText);
+                        questionText.geometry.dispose();
+                        questionText.material.dispose();
+                        renderer.renderLists.dispose();
+                        console.log("Removed old question text");
+                    }
+
+                    questionText = createTextMesh(question.QuestionStatement, font);
+                    cube.add(questionText);
+                    console.log("Added new question text");
+                    questionText.position.set(cube.position.x - 1.5, cube.position.y + 1.5, cube.position.z);
+                    renderer.render(scene, camera);
+
+                    fetchOptions(question.QuestionNo).done(function (options) {
+                        if (options.length > 0) {
+                            optionCubes.forEach(option =>{ 
+                                scene.remove(option.cube);
+                                option.cube.geometry.dispose();
+                                option.cube.material.dispose();
+                                renderer.renderLists.dispose();
+                                console.log("Removed old option cubes");
+                            });
+
+                            optionCubes = options.map((option, index) => {
+                                const optionText = createTextMesh(option.option_text, font);
+                                console.log(option.option_text);
+                                const optionCube = createOptionCube(optionText, {
+                                    x: cube.position.x - 4 + index * 2,
+                                    y: cube.position.y,
+                                    z: ground.position.z - ground.depth / 2
+                                });
+                                optionCube.velocity.set(0, 0, 0.03);
+                                scene.add(optionCube);
+                                console.log("Added new option cubes");
+                                renderer.render(scene, camera);
+                                return { cube: optionCube, text: optionText, correct: option.option_type=="correct" };
+                            });
+                            gamePaused = false;
+                            //requestAnimationFrame(animate);
+                        } else {
+                            console.error("No options fetched");
+                        }
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error fetching options:", textStatus, errorThrown);
+                    });
+                } else {
+                    console.log("All questions answered");
+                    //cancelAnimationFrame(animationId);
+                    saveScore();
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching questions:", textStatus, errorThrown);
+            });
+        }
+
+        fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+            console.log('Loaded font:', font);
+            loadNewQuestionAndOptions(font);
+
+            /*function animateOptions() {
+                
+            }*/
+
+            function animate() {
+                const animationId = requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+
+                if (gamePaused) return;
+
+                cube.velocity.x = 0;
+                cube.velocity.z = 0;
+                if (keys.a.pressed) cube.velocity.x = -0.05;
+                else if (keys.d.pressed) cube.velocity.x = 0.05;
+
+                if (keys.s.pressed) cube.velocity.z = 0.05;
+                else if (keys.w.pressed) cube.velocity.z = -0.05;
+
+                cube.update(ground);
+
+                //animateOptions();
+                optionCubes.forEach(option => {
+                    option.cube.position.add(option.cube.velocity);
+
+                    if (option.cube.position.z > ground.position.z + ground.depth / 2) {
+                        option.cube.position.set(
+                            Math.random() * 8 - 4,
+                            cube.position.y,
+                            ground.position.z - ground.depth / 2
+                        );
+                    }
+                    option.cube.update(ground);
+                    if (boxCollision({ box1: cube, box2: option.cube })) {
+                        console.log('Collision detected!');
+                        gamePaused = true;
+                        //cancelAnimationFrame(animationId);
+                        //optionCubes.forEach(opt => opt.cube.velocity.set(0, 0, 0));
+                        if (option.correct) {
+                            score++;
+                        }
+                        console.log(score);
+                        currentQuestionIndex++;
+                        loadNewQuestionAndOptions(font,animationId);
+                        
+                    }else{
+                        console.log("no collision");
+                    }
+                });
+            }
+            console.log("called animate");
+            animate();
         });
 
         function createTextMesh(text, font) {
+            if (!text) {
+                console.error("Invalid text for createTextMesh:", text, font);
+                return;
+            }
+            if (!font) {
+                console.error("Invalid font for createTextMesh:", text, font);
+                return;
+            }
             const textGeometry = new TextGeometry(text, {
                 font: font,
-                size: 0.5,
-                height: 0.1,
-                curveSegments: 12,
+                size: 0.15,
+                height: 0.001,
+                curveSegments: 12 // Balance between performance and visual quality
             });
             const textMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
             return new THREE.Mesh(textGeometry, textMaterial);
         }
 
         function createOptionCube(textMesh, position) {
-            const cube = new Box({ width: 1, height: 1, depth: 1, color: 'red', position: position });
-            cube.add(textMesh);
-            textMesh.position.set(-0.5, 0.5, 0);
-            return cube;
+            const opcube = new Box({ width: 1, height: 1, depth: 1, color: 'red', position: position });
+            opcube.add(textMesh);
+            opcube.castShadow=true;
+            textMesh.position.set(0, 1.5, 0);
+            return opcube;
         }
+        function saveScore(){
+            const endTime = Date.now();
+            const timeSpent = Math.round((endTime - startTime) / 1000); // Time in seconds
+            const accuracy = Math.round((score / total) * 100); // Percentage of correct answers
+            console.log(timeSpent);
+            console.log(accuracy);
 
-        function animate() {
-            const animationId = requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-
-            cube.velocity.x = 0;
-            cube.velocity.z = 0;
-            if (keys.a.pressed) cube.velocity.x = -0.05;
-            else if (keys.d.pressed) cube.velocity.x = 0.05;
-
-            if (keys.s.pressed) cube.velocity.z = 0.05;
-            else if (keys.w.pressed) cube.velocity.z = -0.05;
-
-            cube.update(ground);
+            $.ajax({
+                url: 'index.php?r=site/save-score',
+                method: 'POST',
+                data: {
+                    score: score,
+                    accuracy: accuracy,
+                    speed: timeSpent,
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        console.log('Score saved successfully');
+                    } else {
+                        console.error('Error saving score:', response.errors);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', status, error);
+                }
+            });
+            console.log("score saved");
         }
-        animate();
     </script>
 </div>
