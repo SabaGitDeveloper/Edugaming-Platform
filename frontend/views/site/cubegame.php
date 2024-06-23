@@ -200,7 +200,7 @@
                     questionText = createTextMesh(question.QuestionStatement, font);
                     cube.add(questionText);
                     console.log("Added new question text");
-                    questionText.position.set(cube.position.x - 1.5, cube.position.y + 1.5, cube.position.z);
+                    questionText.position.set(-1.5,1.5,0);
                     renderer.render(scene, camera);
 
                     fetchOptions(question.QuestionNo).done(function (options) {

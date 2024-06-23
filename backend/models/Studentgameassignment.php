@@ -35,10 +35,9 @@ class Studentgameassignment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idStudentGameAssignment','Accuracy', 'Speed', 'tries', 'CourseID', 'StudentID', 'AssignmentId'], 'required'],
-            [['idStudentGameAssignment','Accuracy', 'Speed', 'tries', 'StudentID', 'AssignmentId'], 'integer'],
+            [['Accuracy', 'Speed', 'tries', 'CourseID', 'StudentID', 'AssignmentId'], 'required'],
+            [['Accuracy', 'Speed', 'tries', 'StudentID', 'AssignmentId'], 'integer'],
             [['CourseID'], 'string', 'max' => 10],
-            [['idStudentGameAssignment'], 'unique'],
             [['StudentID'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['StudentID' => 'memberID']],
             [['CourseID'], 'exist', 'skipOnError' => true, 'targetClass' => Courses::class, 'targetAttribute' => ['CourseID' => 'course_code']],
             [['AssignmentId'], 'exist', 'skipOnError' => true, 'targetClass' => GameAssignments::class, 'targetAttribute' => ['AssignmentId' => 'assignmentID']],

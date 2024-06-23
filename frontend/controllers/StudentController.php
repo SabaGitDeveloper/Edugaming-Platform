@@ -27,9 +27,13 @@ class StudentController extends Controller
     {
         $userId = \Yii::$app->session->get('user_id');
         $StudentCourses = CourseStudent::find()->where(['Student_ID' => $userId])->all();
+        $courses = [];
         foreach ($StudentCourses as $stc){
             $coursecode=$stc->CourseID;
-            $courses = Courses::find()->where(['course_code' => $coursecode])->all();
+            $course = Courses::find()->where(['course_code' => $coursecode])->all();
+            if ($course) {
+                $courses[] = $course;
+            }
         }
         return $this->render( '/student/courses',
             [
@@ -147,7 +151,7 @@ class StudentController extends Controller
     {
         $userId = \Yii::$app->session->get('user_id');
         $StudentRequests = StudentJoinRequests::find()->where(['student_id' => $userId])->all();
-        $teachers=[];
+        $teacherData=[];
         foreach ($StudentRequests as $sr){
             $status=$sr->status;
             if($status=="pending"){
@@ -179,16 +183,30 @@ class StudentController extends Controller
     {
         $userId = \Yii::$app->session->get('user_id');
         $StudentCourses = CourseStudent::find()->where(['Student_ID' => $userId])->all();
+        // Initialize variables
+        $courses = [];
+        $assignments = [];
+        $assignmentScores = [];
+        $courseid = null;
         foreach ($StudentCourses as $stc){
             $coursecode=$stc->CourseID;
-            $courses = Courses::find()->where(['course_code' => $coursecode])->all();
+            $course = Courses::find()->where(['course_code' => $coursecode])->all();
+            if ($course) {
+                $courses[] = $course;
+            }
         }
-        foreach($courses as $course){
-            $courseid=$course->course_code;
-            $assignments = GameAssignments::find()->where(['course_code' => $courseid])->all();
-            foreach ($assignments as $assignment){
-            $AssignmentScore= Studentgameassignment::find()->where(['AssignmentId' => $assignment->assignmentID])->one();
-            $assignmentScores[$assignment->assignmentID] = $AssignmentScore;
+     
+        foreach ($courses as $course) {
+            $courseid = $course->course_code;
+            $courseAssignments = GameAssignments::find()->where(['course_code' => $courseid])->all();
+            foreach ($courseAssignments as $assignment) {
+                $assignments[] = $assignment;
+                $AssignmentScore = Studentgameassignment::find()->where(['AssignmentId' => $assignment->assignmentID])->one();
+                if ($AssignmentScore) {
+                    $assignmentScores[$assignment->assignmentID] = $AssignmentScore;
+                } else {
+                    $assignmentScores[$assignment->assignmentID] = null; // or some default value
+                }
             }
         }
         return $this->render('/student/assignment.php',[

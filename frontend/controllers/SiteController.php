@@ -328,25 +328,25 @@ class SiteController extends Controller
 
     public function actionGetquestions()
     {
-        $request = \Yii::$app->request;
-        $qset= $request->get('qid');
-        $inid=$request->get('inid');
-        $assignmentId=$request->get('assid');
+        // $request = \Yii::$app->request;
+        // $qset= $request->get('qid');
+        // $inid=$request->get('inid');
+        // $assignmentId=$request->get('assid');
         \Yii::$app->response->format =  \yii\web\Response::FORMAT_JSON;
+
+        // Debugging: Print the parameters
+       // Yii::info('QID: ' . $qid . ', INID: ' . $inid . ', ASSID: ' . $assid);
         try {
-            $qset=Yii::$app->request->get('qid');
-            if ($qset === null) {
-                throw new \yii\web\BadRequestHttpException('Question set ID is required');
-            }
-            if (isset($_GET['assid'])) {
-                $assignmentId = $_GET['assid'];
-            } else {
-                // Handle the case where 'qid' is not set
-                throw new \yii\web\BadRequestHttpException('assignment ID is required');
-            }
-            $assignmentId=1;
-            $qset=GameAssignments::find()->where(['assignmentID'=>$assignmentId])->one();
-            $questions = Questions::find()->where(['QuestionSet' => $qset])->all();
+            //$qset=Yii::$app->request->get('qid');
+            // if ($qid === null) {
+            //     throw new \yii\web\BadRequestHttpException('Question set ID is required');
+            // }
+            // if ($assid===null) {
+            //     throw new \yii\web\BadRequestHttpException('assignment ID is required');
+            // }
+            $assid=1;
+            $qid=GameAssignments::find()->where(['assignmentID'=>$assid])->one();
+            $questions = Questions::find()->where(['QuestionSet' => $qid])->all();
             if (empty($questions)) {
                 return ['error' => 'No questions found for the specified question set.'];
             }
@@ -373,31 +373,36 @@ class SiteController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         try {
-        $assId=2;
+            // $request = \Yii::$app->request;
+            // $assid=$request->get('assid');
+        $assid=1;
         $studentId = \Yii::$app->session->get('user_id'); 
-        $courseId = GameAssignments::find()->select('course_code')->where(['assignmentID'=>$assId])->one();
-        //echo $courseId;
-        if (!$courseId) {
+        $gameAssignment = GameAssignments::find()->select('course_code')->where(['assignmentID'=>$assid])->one();
+
+        if (!$gameAssignment) {
             throw new \Exception('GameAssignment not found');
         }
-        $score = Yii::$app->request->post('score');
+        //$score = Yii::$app->request->post('score');
         $accuracy = Yii::$app->request->post('accuracy');
         $speed = Yii::$app->request->post('speed');
+        $courseId = (string)$gameAssignment->course_code;
 
         // Find existing record or create a new one
         $assignment = Studentgameassignment::find()->where([
             'StudentID' => $studentId,
             'CourseID' => $courseId,
+            'AssignmentId' => $assid
         ])->one();
 
         if (!$assignment) {
             $assignment = new Studentgameassignment();
             $assignment->StudentID = $studentId;
-            $assignment->CourseID = $courseId;
+            $assignment->CourseID = (string)$courseId;
             $assignment->tries = 0;
+            $assignment->AssignmentId = $assid;
+           // $assignment->idStudentGameAssignment = 2;
         }
 
-        $assignment->AssignmentId = $assId;
         $assignment->Accuracy = $accuracy;
         $assignment->Speed = $speed;
         $assignment->tries += 1;
